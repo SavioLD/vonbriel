@@ -44,6 +44,53 @@ Beide Wege laufen parallel, siehe `CONFIG` im Script-Teil von `index.html`:
   (derzeit `savio.roeckle@wave2network.de`, jederzeit auf eine Briel-Adresse umstellbar).
   Nur dieser Weg transportiert einen optional hochgeladenen Lebenslauf als Anhang.
 
+## Mobil & Conversion
+
+Die Seite ist mobil-first gebaut – der Großteil des Ad-Traffics kommt vom Handy:
+
+- **Frage 1 steht im ersten Bildschirm.** Auf 360–430 px Breite sind alle vier
+  Antwortmöglichkeiten ohne Scrollen sichtbar (Hero bewusst knapp, Badges als
+  Scroll-Reihe, Karte randnah über die volle Breite).
+- **Große Tap-Ziele:** Antworten min. 58 px hoch, Kontakt-Umschalter 54 px,
+  kein 300-ms-Delay, kein grauer Tap-Blitz, Safe-Area für iPhone-Homebar.
+- **Kurzes Formular:** nur Name, Telefon und PLZ sind sichtbar. E-Mail, Start,
+  Nachricht und Lebenslauf liegen eingeklappt hinter „Optional hinzufügen".
+- **Kein Fortschrittsverlust:** Antworten liegen in der `sessionStorage`. Wer
+  die App wechselt oder neu lädt, landet wieder in derselben Frage.
+- **Sticky-Button als Wiederaufnahme-Anker:** solange die Karte nicht im Bild
+  ist, zeigt er „Weiter – Frage 3 von 5"; nach dem Absenden verschwindet er.
+- **Telefon-Ausweg** unter dem Absende-Button – wer nicht tippen will, ruft an.
+- **Effekte als Feedback, nicht als Deko:** Haken-Animation auf der gewählten
+  Antwort, Richtungs-Animation der Schritte (vor/zurück), Lichtreflex auf dem
+  Fortschrittsbalken, kurzes Vibrieren (Android), Einblenden der Inhalte beim
+  Scrollen, gezeichneter Erfolgs-Haken. Alles respektiert
+  `prefers-reduced-motion`.
+
+### Messbare Funnel-Events
+
+`track()` schickt an Umami/WEBUNDO (`window.umami.track`) und an `window.dataLayer`:
+`funnel_view`, `funnel_start`, `funnel_antwort` (mit Frage & Antwort),
+`funnel_absage` (mit Grund), `funnel_formular`, `formular_optional_geoeffnet`,
+`anruf_klick`, `bewerbung_absenden`, `bewerbung_gesendet`, `bewerbung_fehler`,
+`funnel_resume`, `sticky_cta_klick`. Damit lässt sich sehen, an welcher Frage
+Bewerber abspringen.
+
+## Fotos (`assets/`)
+
+Die Seite bindet echte Werkstatt- und Team-Bilder ein. **Fehlt eine Datei,
+entfernt das Script die Kachel automatisch** (und blendet die Team-Sektion
+komplett aus) – die Seite wirkt also nie kaputt. Erwartete Dateinamen:
+
+| Datei | Motiv | Wo es erscheint |
+|---|---|---|
+| `assets/elektromontage.jpg` | Kollege am offenen Schaltschrank | breites Bild über „Die Stelle im Detail" |
+| `assets/team.jpg` | drei Kollegen, Daumen hoch | großes Bild in der Team-Sektion |
+| `assets/kollege-zeigt.jpg` | Kollege zeigt in die Kamera | Team-Sektion |
+| `assets/kollege-ok.jpg` | Kollege mit OK-Zeichen | Team-Sektion |
+| `assets/werkstatt.jpg` | Anlagenmontage in der Halle | Team-Sektion |
+
+Empfehlung: JPG, längste Kante ca. 1600 px, unter 300 KB pro Bild.
+
 ## Anpassen
 
 - **Texte/Stelle:** alles im `JOBS`-Objekt (`industrieelektriker`) in `index.html`.

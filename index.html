@@ -2,7 +2,9 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a56a4" />
+<meta name="format-detection" content="telephone=no" />
 <title>Industrieelektriker (m/w/d) – Karriere bei Wilfried von Briel Maschinenbau</title>
 <meta name="description" content="Industrieelektriker (m/w/d) für Elektromontage und Verdrahtung bei Wilfried von Briel Maschinenbau in Allensbach. Mini-Check und Bewerbung in unter 2 Minuten – ohne langes Anschreiben." />
 <meta name="robots" content="noindex" />
@@ -88,6 +90,12 @@ img, svg, video { display: block; max-width: 100%; height: auto; }
 a { color: var(--accent-deep); text-decoration: none; transition: color .15s ease; }
 a:hover { color: var(--accent); }
 button { font-family: inherit; cursor: pointer; }
+/* Touch: kein 300ms-Delay, kein grauer Tap-Blitz, aber sichtbarer Tastatur-Fokus */
+button, a, label, summary, input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible { outline: 3px solid rgba(31,111,191,.5); outline-offset: 2px; border-radius: 8px; }
 h1, h2, h3, h4 {
   font-family: var(--display);
   font-weight: 800;
@@ -183,6 +191,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn svg { flex: none; }
 .btn--primary { background: var(--accent); color: #fff; box-shadow: var(--shadow-accent); }
 .btn--primary:hover { background: var(--accent-deep); color: #fff; transform: translateY(-2px); }
+.btn:active { transform: scale(.978); }
 .btn--ghost { background: transparent; color: var(--navy); border-color: var(--line-strong); }
 .btn--ghost:hover { border-color: var(--accent); color: var(--accent-deep); background: var(--accent-soft); }
 .btn--white { background: #fff; color: var(--navy); }
@@ -348,15 +357,28 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   height: 6px; background: var(--surface-2);
 }
 .funnel__bar-fill {
+  position: relative; overflow: hidden;
   height: 100%; width: 0%;
   background: linear-gradient(90deg, var(--accent), #4a93d8);
-  transition: width .35s cubic-bezier(.4,0,.2,1);
+  transition: width .45s cubic-bezier(.4,0,.2,1);
 }
+/* Lichtreflex auf dem Fortschritt – signalisiert „es geht voran" */
+.funnel__bar-fill::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent);
+  transform: translateX(-100%);
+  animation: barShine 2.4s ease-in-out .6s infinite;
+}
+@keyframes barShine { 0% { transform: translateX(-100%); } 55%, 100% { transform: translateX(100%); } }
 .funnel__body { padding: clamp(26px, 4vw, 44px); }
 
-/* Step animation */
+/* Step-Übergang – richtungsabhängig, damit „Zurück" auch so wirkt */
 .step { animation: stepIn .32s cubic-bezier(.16,1,.3,1); }
+.funnel__body[data-dir="fwd"] .step { animation: stepInFwd .34s cubic-bezier(.16,1,.3,1); }
+.funnel__body[data-dir="back"] .step { animation: stepInBack .34s cubic-bezier(.16,1,.3,1); }
 @keyframes stepIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes stepInFwd { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+@keyframes stepInBack { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
 
 .step__count {
   font-size: 13px; font-weight: 700; letter-spacing: .04em;
@@ -376,25 +398,35 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .option {
   display: flex; align-items: center; gap: 14px;
   width: 100%; text-align: left;
-  padding: 17px 18px;
+  min-height: 62px;                    /* komfortables Tap-Ziel */
+  padding: 15px 18px;
   background: var(--bg);
   border: 2px solid var(--line-strong);
   border-radius: var(--radius);
   font-size: 16.5px; font-weight: 600; color: var(--ink);
-  transition: all .15s ease;
+  transition: border-color .15s ease, background .15s ease, transform .12s ease, box-shadow .15s ease;
 }
 .option:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
-.option.is-selected { border-color: var(--accent); background: var(--accent-soft); }
+.option:active { transform: scale(.985); }
+.option.is-selected {
+  border-color: var(--accent); background: var(--accent-soft);
+  box-shadow: 0 0 0 4px rgba(31,111,191,.12);
+}
 .option__dot {
-  flex: none; width: 24px; height: 24px; border-radius: 50%;
-  border: 2px solid var(--line-strong); position: relative; transition: all .15s ease;
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--line-strong); position: relative;
+  transition: border-color .15s ease, background .15s ease;
 }
 .option:hover .option__dot, .option.is-selected .option__dot { border-color: var(--accent); }
-.option.is-selected .option__dot { background: var(--accent); }
+.option.is-selected .option__dot { background: var(--accent); border-color: var(--accent); }
+/* Haken statt Punkt: klare Bestätigung, dass die Antwort sitzt */
 .option.is-selected .option__dot::after {
-  content: ""; position: absolute; inset: 5px;
-  background: #fff; border-radius: 50%;
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center;
+  animation: dotPop .28s cubic-bezier(.2,1.5,.4,1);
 }
+@keyframes dotPop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .option__label { flex: 1; }
 
 /* Formular -------------------------------------------------------------- */
@@ -425,14 +457,22 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Sticky Apply-CTA (nur mobil) */
 .apply-sticky {
-  position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 60;
+  position: fixed; left: 14px; right: 14px; z-index: 60;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   display: none; align-items: center; justify-content: center; gap: 10px;
+  min-height: 58px;
   background: var(--accent); color: #fff; font-weight: 700; font-size: 16.5px;
   padding: 16px 22px; border-radius: var(--radius-pill);
   box-shadow: 0 14px 32px -8px rgba(31,111,191,.75);
 }
-.apply-sticky:hover { color: #fff; }
+.apply-sticky:hover, .apply-sticky:active { color: #fff; }
+.apply-sticky:active { transform: scale(.985); }
 @keyframes stickyIn { from { transform: translateY(22px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Zwei ruhige Pulse beim Einblenden – holt den Blick, ohne zu nerven */
+@keyframes stickyPulse {
+  0%, 100% { box-shadow: 0 14px 32px -8px rgba(31,111,191,.75); }
+  50%      { box-shadow: 0 14px 32px -8px rgba(31,111,191,.95), 0 0 0 9px rgba(31,111,191,.16); }
+}
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .field { display: flex; flex-direction: column; gap: 7px; }
@@ -630,9 +670,154 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .money__card { flex-direction: column; text-align: center; gap: 16px; }
 
   /* Sticky-CTA nur auf Mobil einblenden + Platz schaffen */
-  .apply-sticky.is-visible { display: flex; animation: stickyIn .25s ease; }
-  body.has-sticky { padding-bottom: 84px; }
+  .apply-sticky.is-visible { display: flex; animation: stickyIn .25s ease, stickyPulse 2.6s ease-in-out 1s 2; }
+  body.has-sticky { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
   .funnel__back { padding: 12px 6px; font-size: 15.5px; }
+}
+
+/* ======================================================================
+   MOBIL-OPTIMIERUNG & CONVERSION
+   Ziel: Frage 1 sofort sichtbar, große Tap-Ziele, kurzes Formular,
+   dezente Effekte als Fortschritts- und Bestätigungs-Feedback.
+   ====================================================================== */
+
+/* Vertrauens-Chips unter der Funnel-Karte (statt einer langen Textzeile) */
+.funnel__reassure {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 6px 16px; margin-top: 14px;
+  font-size: 13.5px; color: #9fb6ce;
+}
+.funnel__reassure span { display: inline-flex; align-items: center; gap: 6px; }
+.funnel__reassure svg { flex: none; color: #7db2ee; }
+
+/* Aufklappbare Optional-Felder im Bewerbungsformular */
+.more { grid-column: 1 / -1; border-top: 1px dashed var(--line-strong); padding-top: 6px; }
+.more > summary {
+  display: flex; align-items: center; gap: 9px;
+  min-height: 48px; list-style: none; cursor: pointer;
+  font-size: 14.5px; font-weight: 700; color: var(--accent-deep);
+}
+.more > summary::-webkit-details-marker { display: none; }
+.more > summary svg { flex: none; transition: transform .2s ease; }
+.more[open] > summary svg { transform: rotate(180deg); }
+.more__body { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 4px 0 8px; }
+.more__body .field.full { grid-column: 1 / -1; }
+
+/* Absicherung direkt am Absende-Button + Telefon-Ausweg */
+.form-foot { grid-column: 1 / -1; display: grid; gap: 10px; margin-top: 2px; }
+.form-safe { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.form-safe svg { flex: none; margin-top: 1px; color: var(--ok); }
+.call-hint {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; min-height: 50px; margin-top: 12px;
+  font-size: 15px; font-weight: 700; color: var(--navy);
+  border: 1.5px solid var(--line-strong); border-radius: var(--radius-pill);
+  background: var(--bg);
+}
+.call-hint:hover { border-color: var(--accent); color: var(--accent-deep); background: var(--accent-soft); }
+.call-hint svg { flex: none; color: var(--accent); }
+
+/* ----------------------------------------------------------------------
+   FOTOS (echte Werkstatt- und Team-Bilder aus Allensbach)
+   Die Dateien liegen unter assets/. Fehlt eine Datei, entfernt setupShots()
+   die Kachel automatisch – die Seite wirkt nie „kaputt".
+---------------------------------------------------------------------- */
+.shot {
+  position: relative; margin: 0; overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+.shot img { width: 100%; height: 100%; object-fit: cover; }
+.shot figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 42px 22px 16px;
+  font-size: 14.5px; font-weight: 600; color: #fff; line-height: 1.4;
+  background: linear-gradient(transparent, rgba(6,55,99,.9));
+}
+.shot--wide { aspect-ratio: 16 / 7; margin-bottom: clamp(24px, 4vw, 36px); }
+
+.team { background: var(--bg); }
+.team__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.team__grid .shot { aspect-ratio: 4 / 3; }
+.team__grid .shot--lead { grid-column: span 2; aspect-ratio: 16 / 10; }
+
+@media (max-width: 720px) {
+  .shot--wide { aspect-ratio: 4 / 3; border-radius: 16px; }
+  .team__grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .team__grid .shot--lead { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
+  .shot figcaption { padding: 34px 15px 12px; font-size: 13px; }
+}
+
+/* Einblenden beim Scrollen (per IntersectionObserver, gestaffelt) */
+.reveal { opacity: 0; transform: translateY(18px); }
+.reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .55s ease, transform .55s cubic-bezier(.16,1,.3,1);
+}
+
+/* Hero-Einstieg: Text staffelt sich ein, die Funnel-Karte bleibt sofort da */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.hero__badges { animation: fadeUp .45s both; }
+#heroTitle      { animation: fadeUp .5s .06s both; }
+.hero__sub      { animation: fadeUp .5s .12s both; }
+.hero__trust    { animation: fadeUp .5s .18s both; }
+
+/* Erfolgs-Haken zeichnet sich */
+.success__ic svg path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .5s .18s ease forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+@media (max-width: 720px) {
+  /* Above the fold: Hero so knapp wie möglich, damit Frage 1 im Bild ist */
+  .hero__inner { padding-block: 10px 18px; row-gap: 12px; }
+  .hero h1 { font-size: clamp(21px, 6.1vw, 27px); margin-bottom: 7px; }
+  .hero__sub { font-size: 14.5px; -webkit-line-clamp: 2; }
+  .hero__badges {
+    margin-bottom: 8px; gap: 6px; flex-wrap: nowrap;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .hero__badges::-webkit-scrollbar { display: none; }
+  .hero__badge { flex: none; }
+  /* Karte nutzt die volle Breite – mehr Platz für Antwort-Texte */
+  .funnel-wrap { margin-inline: calc(var(--gutter) * -0.5); width: auto; }
+  .funnel { border-radius: 18px; }
+  .funnel__body { padding: 18px 16px 20px; }
+  .step__q { font-size: 20px; line-height: 1.2; }
+  .step__help { font-size: 14.5px; margin-bottom: 14px; }
+
+  /* Tap-Ziele: mindestens 58px hoch, angenehme Abstände */
+  .option { min-height: 58px; padding: 13px 15px; font-size: 16px; gap: 12px; }
+  .option__dot { width: 24px; height: 24px; }
+  .seg { min-height: 54px; }
+  .btn--lg { padding: 17px 24px; }
+
+  /* Formular: Absende-Button volle Breite, „Zurück" darunter */
+  #appForm .funnel__nav { flex-direction: column; align-items: stretch; gap: 4px; margin-top: 18px; }
+  #appForm .funnel__nav .btn { width: 100%; order: -1; }
+  #appForm .funnel__nav .funnel__back { justify-content: center; }
+  .more__body { grid-template-columns: 1fr; }
+  .field textarea { min-height: 76px; }
+
+  .funnel__reassure { gap: 4px 12px; font-size: 12.5px; }
+  .success__steps { max-width: none; }
+  .money__ic { width: 62px; height: 62px; }
+}
+
+@media (max-width: 400px) {
+  .hero h1 { font-size: 20.5px; }
+  .option { font-size: 15.5px; }
+  .funnel__head-hint { display: none; }
+}
+
+/* Wer Animationen abgeschaltet hat, bekommt keine */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
 }
 
 </style>
@@ -699,9 +884,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
             <span class="funnel__head-hint">ca. 60 Sek.</span>
           </div>
           <div class="funnel__bar"><div class="funnel__bar-fill" id="funnelBar"></div></div>
-          <div class="funnel__body" id="funnelBody"><!-- JS --></div>
+          <div class="funnel__body" id="funnelBody" aria-live="polite"><!-- JS --></div>
         </div>
-        <p class="funnel__reassure">100 % unverbindlich · kein langes Anschreiben nötig</p>
+        <p class="funnel__reassure">
+          <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 5 kurze Fragen</span>
+          <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> kein Anschreiben nötig</span>
+          <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 100 % unverbindlich</span>
+        </p>
       </div>
 
       <!-- TODO (mit Briel abstimmen): Die drei Punkte sind bewusst allgemein
@@ -730,7 +919,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   <!-- MONEY-HOOK (Zusatzgeld, ohne Betrag) -->
   <section class="money" id="moneyHook" hidden>
     <div class="shell">
-      <div class="money__card">
+      <div class="money__card reveal">
         <span class="money__ic">
           <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8S9.5 3 7 4.5 12 8 12 8zM12 8s2.5-5 5-3.5S12 8 12 8z"/></svg>
         </span>
@@ -750,24 +939,32 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
         <h2 id="detailsTitle"><!-- JS --></h2>
         <p id="detailsLead"><!-- JS --></p>
       </div>
+
+      <!-- Kernfoto: Elektromontage am offenen Schaltschrank -->
+      <figure class="shot shot--wide reveal" data-shot>
+        <img src="assets/elektromontage.jpg" alt="Mitarbeiter von Wilfried von Briel Maschinenbau bei der Elektromontage an einem offenen Schaltschrank"
+             style="object-position: 45% 50%" loading="lazy" decoding="async" width="1600" height="1067" />
+        <figcaption>Schaltschrank auf, Plan daneben – so sieht dein Arbeitstag bei uns aus.</figcaption>
+      </figure>
+
       <div class="cols">
-        <div class="col-card">
+        <div class="col-card reveal">
           <div class="col-card__ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-6.4 6.4a2 2 0 1 0 2.8 2.8l6.4-6.4a4 4 0 0 0 5.6-5.6l-2.8 2.8-2-2 2.8-2.8z"/></svg></div>
           <h3>Deine Aufgaben</h3>
           <ul class="ticks" id="colTasks"><!-- JS --></ul>
         </div>
-        <div class="col-card">
+        <div class="col-card reveal">
           <div class="col-card__ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <h3>Dein Profil</h3>
           <ul class="ticks" id="colProfile"><!-- JS --></ul>
         </div>
-        <div class="col-card">
+        <div class="col-card reveal">
           <div class="col-card__ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/></svg></div>
           <h3>Wir bieten</h3>
           <ul class="ticks" id="colBenefits"><!-- JS --></ul>
         </div>
       </div>
-      <div class="cols-cta">
+      <div class="cols-cta reveal">
         <a href="#bewerbung" class="btn btn--primary btn--lg">
           Jetzt bewerben – in 60 Sekunden
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -777,9 +974,49 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     </div>
   </section>
 
-  <!-- Sticky Apply-CTA (nur mobil, bis der Funnel gestartet ist) -->
-  <a href="#bewerbung" class="apply-sticky" id="applySticky" aria-label="Jetzt bewerben">
-    In 60 Sekunden bewerben
+  <!-- TEAM / EINBLICK – echte Gesichter statt Stockfotos.
+       Stärkster Vertrauensbaustein im gewerblichen Recruiting. -->
+  <section class="section team" id="team">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow eyebrow--center">Deine künftigen Kollegen</span>
+        <h2>Kein Konzern. Ein Team, das zusammenhält.</h2>
+        <p>Bei uns arbeitest du mit Leuten, die ihr Handwerk seit Jahren machen – und die dich einarbeiten, statt dich ins kalte Wasser zu werfen.</p>
+      </div>
+      <div class="team__grid" id="teamGrid">
+        <figure class="shot shot--lead reveal" data-shot>
+          <img src="assets/team.jpg" alt="Drei Mitarbeiter von Wilfried von Briel Maschinenbau in der Werkstatt in Allensbach"
+               style="object-position: 50% 32%" loading="lazy" decoding="async" width="1600" height="1067" />
+          <figcaption>Daumen hoch heißt bei uns: läuft.</figcaption>
+        </figure>
+        <figure class="shot reveal" data-shot>
+          <img src="assets/kollege-zeigt.jpg" alt="Mitarbeiter in der Werkstatt zeigt in die Kamera"
+               style="object-position: 50% 28%" loading="lazy" decoding="async" width="1600" height="1067" />
+        </figure>
+        <figure class="shot reveal" data-shot>
+          <img src="assets/kollege-ok.jpg" alt="Mitarbeiter in der Werkstatt gibt das OK-Zeichen"
+               style="object-position: 45% 30%" loading="lazy" decoding="async" width="1600" height="1067" />
+        </figure>
+        <figure class="shot reveal" data-shot>
+          <img src="assets/werkstatt.jpg" alt="Montage von Anlagen in der Werkstatt in Allensbach"
+               style="object-position: 50% 45%" loading="lazy" decoding="async" width="1600" height="1067" />
+          <figcaption>Anlagenbau in Allensbach</figcaption>
+        </figure>
+      </div>
+      <div class="cols-cta reveal">
+        <a href="#bewerbung" class="btn btn--primary btn--lg">
+          Passt zu dir? Mini-Check starten
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <span class="cols-cta__hint">5 Fragen, keine Bewerbungsmappe – danach wissen wir beide, ob es passt.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky Apply-CTA (nur mobil): vor dem Start „bewerben", danach
+       „Weiter – Frage X von 5" als Wiederaufnahme-Anker (Text kommt aus JS). -->
+  <a href="#bewerbung" class="apply-sticky" id="applySticky" aria-label="Zum Mini-Check">
+    <span id="stickyLabel">In 60 Sekunden bewerben</span>
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
   </a>
 
@@ -1046,7 +1283,54 @@ const ICON = {
 /* ----------------------------------------------------------------------
    STATE
 ---------------------------------------------------------------------- */
-const state = { jobKey: null, job: null, pos: 1, answers: {}, rejected: false, koReason: "", koFromPos: 1, variant: "fit", started: false, _updateSticky: null };
+const state = { jobKey: null, job: null, pos: 1, answers: {}, rejected: false, koReason: "", koFromPos: 1, variant: "fit", started: false, done: false, dir: "fwd", _updateSticky: null };
+
+const REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ----------------------------------------------------------------------
+   TRACKING – damit die Funnel-Stufen messbar sind (Umami/WEBUNDO + dataLayer).
+   Fällt still aus, wenn kein Tracker geladen ist.
+---------------------------------------------------------------------- */
+function track(event, props) {
+  const payload = Object.assign({ job: state.jobKey || "", variante: state.variant }, props || {});
+  try {
+    if (window.umami && typeof window.umami.track === "function") window.umami.track(event, payload);
+  } catch (e) { /* egal */ }
+  try {
+    (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, payload));
+  } catch (e) { /* egal */ }
+}
+
+/* ----------------------------------------------------------------------
+   FORTSCHRITT SICHERN – Handy-Nutzer wechseln die App, Browser laden neu.
+   Antworten und Position liegen in der sessionStorage, damit niemand
+   von vorne anfangen muss (nur bis Tab-Ende, bewusst kein localStorage).
+---------------------------------------------------------------------- */
+const STORE_KEY = "vb_funnel_v1";
+function saveProgress() {
+  try {
+    sessionStorage.setItem(STORE_KEY, JSON.stringify({
+      job: state.jobKey, pos: state.pos, answers: state.answers, done: state.done,
+    }));
+  } catch (e) { /* Privatmodus o. ä. */ }
+}
+function restoreProgress(jobKey) {
+  try {
+    const raw = sessionStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (!d || d.job !== jobKey || d.done) return null;
+    return d;
+  } catch (e) { return null; }
+}
+function clearProgress() {
+  try { sessionStorage.removeItem(STORE_KEY); } catch (e) { /* egal */ }
+}
+
+/* Sanftes taktiles Feedback auf Android – iOS ignoriert es einfach. */
+function buzz(ms) {
+  try { if (!REDUCED_MOTION && navigator.vibrate) navigator.vibrate(ms || 8); } catch (e) { /* egal */ }
+}
 
 /* ----------------------------------------------------------------------
    ROUTING / BOOT
@@ -1098,6 +1382,16 @@ function loadJob(key) {
   state.answers = {};
   state.rejected = false;
   state.started = false;
+  state.done = false;
+
+  // Angefangenen Mini-Check fortsetzen, statt bei Frage 1 neu zu starten
+  const saved = restoreProgress(key);
+  if (saved && saved.pos > 1) {
+    state.answers = saved.answers || {};
+    state.pos = Math.min(saved.pos, state.job.questions.length + 1);
+    state.started = true;
+    track("funnel_resume", { frage: state.pos });
+  }
 
   $("#pickerSection").hidden = true;
   $("#jobView").hidden = false;
@@ -1106,7 +1400,58 @@ function loadJob(key) {
   renderFunnel();
   attachCtas();
   setupStickyCta();
+  setupShots();
+  setupReveal();
   document.title = `${state.job.title} ${state.job.gender} – Karriere bei Wilfried von Briel Maschinenbau`;
+  track("funnel_view");
+}
+
+/* Fehlende Bilddateien sauber wegräumen: Kachel entfernen, und wenn dadurch
+   die Team-Sektion leer wäre, verschwindet sie komplett. So sieht die Seite
+   auch vor dem Foto-Upload fertig aus. */
+function setupShots() {
+  const prune = () => {
+    const sec = $("#team");
+    if (sec && !sec.querySelectorAll("[data-shot]").length) sec.hidden = true;
+  };
+  document.querySelectorAll("[data-shot] img").forEach((img) => {
+    const drop = () => {
+      const fig = img.closest("[data-shot]");
+      if (fig && fig.parentNode) fig.parentNode.removeChild(fig);
+      prune();
+    };
+    if (img.complete && img.naturalWidth === 0) drop();
+    else img.addEventListener("error", drop, { once: true });
+    // Fehlt die Datei, räumen wir schon vor dem Scrollen auf – HEAD lädt kein
+    // Bild, das lazy-loading bleibt also erhalten.
+    try {
+      fetch(img.getAttribute("src"), { method: "HEAD" })
+        .then((r) => { if (!r.ok) drop(); })
+        .catch(() => { /* file:// oder offline – der error-Listener greift */ });
+    } catch (e) { /* egal */ }
+  });
+  prune();
+}
+
+/* Inhalte blenden sich beim Scrollen ein – gestaffelt, ohne Layout-Sprung. */
+function setupReveal() {
+  const items = document.querySelectorAll(".reveal");
+  if (!items.length) return;
+  if (REDUCED_MOTION || !("IntersectionObserver" in window)) {
+    items.forEach((el) => el.classList.add("is-in"));
+    return;
+  }
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      const group = en.target.parentElement;
+      const i = group ? Array.prototype.indexOf.call(group.children, en.target) : 0;
+      en.target.style.transitionDelay = Math.min(i, 3) * 90 + "ms";
+      en.target.classList.add("is-in");
+      obs.unobserve(en.target);
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+  items.forEach((el) => io.observe(el));
 }
 
 /* ----------------------------------------------------------------------
@@ -1159,18 +1504,30 @@ function attachCtas() {
   });
 }
 
-// Sticky „Jetzt bewerben"-Button (mobil): sichtbar, solange der Funnel nicht
-// im Bild ist UND noch nicht gestartet wurde.
+// Sticky-Button (mobil): sichtbar, sobald die Funnel-Karte aus dem Bild ist.
+// Vor dem Start wirbt er fürs Bewerben, danach ist er der Wiederaufnahme-Anker
+// („Weiter – Frage 3 von 5"), damit niemand den angefangenen Check verliert.
+// Nach dem Absenden verschwindet er ganz.
 function setupStickyCta() {
   const sticky = $("#applySticky");
+  const label = $("#stickyLabel");
   const card = $(".funnel");
   if (!sticky || !card) return;
   const update = () => {
-    const show = !state.started && !sticky._inView;
+    const N = state.job.questions.length;
+    if (label) {
+      if (state.done) label.textContent = "Bewerbung gesendet";
+      else if (state.rejected) label.textContent = "Antwort ändern";
+      else if (state.pos > N) label.textContent = "Weiter – letzter Schritt";
+      else if (state.started) label.textContent = `Weiter – Frage ${state.pos} von ${N}`;
+      else label.textContent = "In 60 Sekunden bewerben";
+    }
+    const show = !state.done && !sticky._inView;
     sticky.classList.toggle("is-visible", show);
     document.body.classList.toggle("has-sticky", show);
   };
   state._updateSticky = update;
+  sticky.addEventListener("click", () => track("sticky_cta_klick", { frage: state.pos }));
   if ("IntersectionObserver" in window) {
     sticky._inView = true;
     new IntersectionObserver((entries) => {
@@ -1193,9 +1550,18 @@ function setProgress() { setBar((state.pos / totalPos()) * 100); }
 function ensureVisible(force) {
   const card = $(".funnel");
   if (!card) return;
-  const top = card.getBoundingClientRect().top;
-  if (force || top < 64 || top > window.innerHeight * 0.55) {
-    window.scrollTo({ top: card.getBoundingClientRect().top + window.scrollY - 90, behavior: "smooth" });
+  const r = card.getBoundingClientRect();
+  const offset = window.innerWidth <= 720 ? 62 : 90; // mobil klebt die Topbar tiefer
+  // Karte holen, wenn sie hinter der Topbar liegt, unten aus dem Bild rutscht
+  // oder (auf dem Handy) nicht mehr ganz reinpasst.
+  const tooHigh = r.top < offset - 8;
+  const tooLow = r.top > window.innerHeight * 0.5;
+  const tooTall = r.height > window.innerHeight && r.top < 0;
+  if (force || tooHigh || tooLow || tooTall) {
+    window.scrollTo({
+      top: r.top + window.scrollY - offset,
+      behavior: REDUCED_MOTION ? "auto" : "smooth",
+    });
   }
 }
 
@@ -1203,11 +1569,13 @@ function renderFunnel() {
   const j = state.job;
   const N = j.questions.length;
   const body = $("#funnelBody");
+  body.dataset.dir = state.dir; // steuert die Richtung der Step-Animation
 
   if (state.rejected) {
     setBar(100);
     body.innerHTML = renderReject();
     bindReject();
+    if (state._updateSticky) state._updateSticky();
     return;
   }
   setProgress();
@@ -1215,29 +1583,36 @@ function renderFunnel() {
   if (state.pos >= 1 && state.pos <= N) {
     body.innerHTML = renderQuestion(j.questions[state.pos - 1], state.pos, N);
     bindQuestion();
+    if (state._updateSticky) state._updateSticky();
     return;
   }
   if (state.pos === N + 1) {
     body.innerHTML = renderForm();
     bindForm();
+    track("funnel_formular", { qualifikation: computeMatch().text });
+    if (state._updateSticky) state._updateSticky();
     return;
   }
   body.innerHTML = renderSuccess();
+  if (state._updateSticky) state._updateSticky();
 }
 
 function goTo(pos) {
+  state.dir = pos >= state.pos ? "fwd" : "back";
   state.pos = pos;
+  saveProgress();
   renderFunnel();
   // Bei größeren Schritten (Formular/Success) sicherstellen, dass die Karte sichtbar ist
   const N = state.job.questions.length;
   if (pos >= N + 1) ensureVisible(false);
+  else ensureVisible(false); // auch zwischen Fragen: Karte im Blick halten
 }
 
 /* ----- Frage ----- */
 function renderQuestion(question, posNum, N) {
   const opts = question.options
     .map(
-      (o, i) => `<button type="button" class="option" data-i="${i}">
+      (o, i) => `<button type="button" class="option" data-i="${i}" aria-pressed="false">
         <span class="option__dot"></span>
         <span class="option__label">${esc(o.label)}</span>
       </button>`
@@ -1264,18 +1639,34 @@ function bindQuestion() {
     .querySelectorAll(".option")
     .forEach((btn) => {
       const i = +btn.dataset.i;
-      if (saved && saved.label === q.options[i].label) btn.classList.add("is-selected");
+      if (saved && saved.label === q.options[i].label) {
+        btn.classList.add("is-selected");
+        btn.setAttribute("aria-pressed", "true");
+      }
       btn.addEventListener("click", () => {
         const opt = q.options[i];
         state.answers[q.short] = { label: opt.label, score: opt.score, scored: q.scored };
-        if (!state.started) { state.started = true; if (state._updateSticky) state._updateSticky(); }
-        $("#opts").querySelectorAll(".option").forEach((b) => b.classList.remove("is-selected"));
+        buzz(8);
+        if (!state.started) {
+          state.started = true;
+          track("funnel_start");
+          if (state._updateSticky) state._updateSticky();
+        }
+        track("funnel_antwort", { frage: q.short, nr: state.pos, antwort: opt.label });
+        $("#opts").querySelectorAll(".option").forEach((b) => {
+          b.classList.remove("is-selected");
+          b.setAttribute("aria-pressed", "false");
+        });
         btn.classList.add("is-selected");
+        btn.setAttribute("aria-pressed", "true");
+        saveProgress();
 
         // Knockout → sofortige Absage
         if (opt.ko) {
           state.koReason = opt.koReason || "die nötigen Voraussetzungen";
           state.koFromPos = state.pos;
+          track("funnel_absage", { frage: q.short, grund: state.koReason });
+          clearProgress();
           setTimeout(() => { state.rejected = true; renderFunnel(); ensureVisible(false); }, 230);
           return;
         }
@@ -1335,8 +1726,8 @@ function renderForm() {
   const N = state.job.questions.length;
   return `<div class="step">
     <div class="step__count">Letzter Schritt</div>
-    <h3 class="step__q">Fast geschafft – deine Kontaktdaten</h3>
-    <p class="step__help">Wir melden uns telefonisch, per WhatsApp oder E-Mail bei dir.</p>
+    <h3 class="step__q">Fast geschafft – wie erreichen wir dich?</h3>
+    <p class="step__help">Drei Felder, dann bist du durch. Wir melden uns innerhalb von 2 Werktagen.</p>
 
     <span class="match-chip match-chip--${m.cls}">${ICON.check} Dein Ergebnis: ${esc(m.level)}</span>
     <p class="pay-note">Dein genaues Gehalt besprechen wir persönlich – fair und abhängig von deiner Erfahrung.</p>
@@ -1345,11 +1736,11 @@ function renderForm() {
       <div class="form-grid">
         <div class="field">
           <label for="fName">Name *</label>
-          <input id="fName" name="Name" type="text" required autocomplete="name" placeholder="Vor- und Nachname" />
+          <input id="fName" name="Name" type="text" required autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Vor- und Nachname" />
         </div>
         <div class="field">
           <label for="fPhone">Telefon / WhatsApp *</label>
-          <input id="fPhone" name="Telefon" type="tel" required autocomplete="tel" inputmode="tel" placeholder="z. B. 0170 1234567" />
+          <input id="fPhone" name="Telefon" type="tel" required autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="z. B. 0170 1234567" />
         </div>
         <div class="field full">
           <label>Wie erreichen wir dich am liebsten?</label>
@@ -1364,35 +1755,46 @@ function renderForm() {
             </button>
           </div>
         </div>
-        <div class="field">
+        <div class="field full">
           <label for="fPlz">PLZ *</label>
-          <input id="fPlz" name="PLZ" type="text" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="z. B. 78476" />
+          <input id="fPlz" name="PLZ" type="text" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" enterkeyhint="done" placeholder="z. B. 78476" />
         </div>
-        <div class="field">
-          <label for="fEmail">E-Mail <span class="opt">(optional)</span></label>
-          <input id="fEmail" name="E-Mail" type="email" autocomplete="email" inputmode="email" placeholder="name@beispiel.de" />
-        </div>
-        <div class="field full">
-          <label for="fStart">Frühester Start</label>
-          <select id="fStart" name="Frühester Start">
-            <option>Ab sofort</option>
-            <option>In 1 Monat</option>
-            <option>In 2–3 Monaten</option>
-            <option>Nach Absprache</option>
-          </select>
-        </div>
-        <div class="field full">
-          <label for="fMsg">Nachricht <span class="opt">(optional)</span></label>
-          <textarea id="fMsg" name="Nachricht" placeholder="Gibt es etwas, das wir vorab wissen sollten?"></textarea>
-        </div>
-        <div class="field full">
-          <label for="fCv">Lebenslauf / Unterlagen <span class="opt">(optional)</span></label>
-          <label class="file-field" id="fileLabel">
-            <input id="fCv" name="Lebenslauf" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-            <span class="file-field__ic">${ICON.upload}</span>
-            <span class="file-field__txt" id="fileTxt">PDF, Word oder Bild – max. ${CONFIG.maxUploadMB} MB</span>
-          </label>
-        </div>
+
+        <!-- Alles Optionale ist eingeklappt: auf dem Handy sind so nur drei
+             Pflichtfelder sichtbar – das kostet am wenigsten Abbrüche. -->
+        <details class="more" id="moreFields">
+          <summary>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
+            Optional hinzufügen: E-Mail, Start, Nachricht &amp; Lebenslauf
+          </summary>
+          <div class="more__body">
+            <div class="field">
+              <label for="fEmail">E-Mail <span class="opt">(optional)</span></label>
+              <input id="fEmail" name="E-Mail" type="email" autocomplete="email" inputmode="email" placeholder="name@beispiel.de" />
+            </div>
+            <div class="field">
+              <label for="fStart">Frühester Start</label>
+              <select id="fStart" name="Frühester Start">
+                <option>Ab sofort</option>
+                <option>In 1 Monat</option>
+                <option>In 2–3 Monaten</option>
+                <option>Nach Absprache</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="fMsg">Nachricht <span class="opt">(optional)</span></label>
+              <textarea id="fMsg" name="Nachricht" placeholder="Gibt es etwas, das wir vorab wissen sollten?"></textarea>
+            </div>
+            <div class="field full">
+              <label for="fCv">Lebenslauf / Unterlagen <span class="opt">(optional)</span></label>
+              <label class="file-field" id="fileLabel">
+                <input id="fCv" name="Lebenslauf" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                <span class="file-field__ic">${ICON.upload}</span>
+                <span class="file-field__txt" id="fileTxt">PDF, Word oder Bild – max. ${CONFIG.maxUploadMB} MB</span>
+              </label>
+            </div>
+          </div>
+        </details>
 
         <label class="consent">
           <input type="checkbox" id="fConsent" required />
@@ -1400,12 +1802,24 @@ function renderForm() {
         </label>
 
         <div class="form-error" id="formError"></div>
+
+        <div class="form-foot">
+          <p class="form-safe">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/></svg>
+            Kein Anschreiben, kein Lebenslauf nötig. Deine Angaben nutzen wir ausschließlich für deine Bewerbung.
+          </p>
+        </div>
       </div>
 
       <div class="funnel__nav">
         <button type="button" class="funnel__back" data-back>${ICON.back} Zurück</button>
         <button type="submit" class="btn btn--primary btn--lg" id="submitBtn">Bewerbung absenden ${ICON.arrow}</button>
       </div>
+
+      <a class="call-hint" href="tel:+497533993990" id="callHint">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Lieber direkt anrufen? 0 75 33 / 99 399 – 0
+      </a>
     </form>
   </div>`;
 }
@@ -1420,6 +1834,10 @@ function bindForm() {
       btn.classList.add("is-active");
     });
   });
+  const more = $("#moreFields");
+  if (more) more.addEventListener("toggle", () => { if (more.open) track("formular_optional_geoeffnet"); });
+  const call = $("#callHint");
+  if (call) call.addEventListener("click", () => track("anruf_klick", { stelle: state.job.title }));
   const file = $("#fCv");
   file.addEventListener("change", () => {
     const f = file.files[0];
@@ -1460,10 +1878,15 @@ async function onSubmit(e) {
   btn.innerHTML = '<span class="spinner"></span> Wird gesendet …';
 
   const data = { name, phone, email, plz, contactPref };
+  track("bewerbung_absenden", { kontakt: contactPref, mit_lebenslauf: !!file });
   const ok = await sendLead(data, file);
   if (ok) {
+    state.done = true;
+    clearProgress();
+    track("bewerbung_gesendet", { qualifikation: computeMatch().text, kontakt: contactPref });
     goTo(totalPos());
   } else {
+    track("bewerbung_fehler");
     btn.disabled = false;
     btn.innerHTML = "Bewerbung absenden " + ICON.arrow;
     fail("Senden hat nicht geklappt. Bitte versuche es erneut oder schreib uns direkt.");
