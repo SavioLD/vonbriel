@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ad-Creatives · Wilfried von Briel Maschinenbau</title>
+<meta name="robots" content="noindex" />
+<style>
+/* ==========================================================================
+   Ad-Creatives · Wilfried von Briel Maschinenbau
+   Recruiting-Motive für Meta: Feed 4:5 (1080×1350) und Story/Reels (1080×1920)
+
+   ►► RENDERN:       python3 render.py      → PNGs landen in png/
+   ►► TEXTE ÄNDERN:  unten im CONCEPTS-Array – jedes Konzept wird automatisch
+                     in beiden Formaten aufgebaut.
+   ►► FOTOS:         ../assets/ (dieselben Dateien wie die Karriereseite).
+                     Fehlt eine Datei, fällt das Motiv auf die reine Typo-/
+                     Schaltplan-Variante zurück – nie ein leerer Rahmen.
+
+   Aufbau jeder Fläche (Flexbox, deshalb überlagert sich nie etwas):
+       [ .art  – Motiv/Freiraum, wächst ]
+       [ .block – Eyebrow, Headline, Sub, CTA ]
+       [ .foot  – Wortmarke + Standort ]
+   ========================================================================== */
+@font-face { font-family: "Poppins"; font-weight: 600; font-display: block; src: url("../assets/fonts/poppins-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 700; font-display: block; src: url("../assets/fonts/poppins-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 800; font-display: block; src: url("../assets/fonts/poppins-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("../assets/fonts/inter-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-display: block; src: url("../assets/fonts/inter-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("../assets/fonts/inter-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-display: block; src: url("../assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  --brand: #0a56a4;
+  --brand-deep: #084784;
+  --brand-900: #063763;
+  --accent: #1f6fbf;
+  --sky: #9dc8f2;
+  --signal: #ffcf5c;
+  --display: "Poppins", sans-serif;
+  --body: "Inter", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #e9eef3; font-family: var(--body); padding: 40px; }
+img, svg { display: block; }
+
+.sheet { display: flex; flex-wrap: wrap; gap: 44px; align-items: flex-start; }
+.item__name { font: 600 13px/1.5 var(--body); color: #55636e; margin-bottom: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.item__hint { text-transform: none; font-weight: 500; color: #7c8894; letter-spacing: 0; }
+
+/* Fläche -------------------------------------------------------------- */
+.canvas {
+  position: relative; overflow: hidden; color: #fff;
+  background: linear-gradient(158deg, var(--brand) 0%, var(--brand-deep) 54%, var(--brand-900) 100%);
+}
+.canvas[data-fmt="45"] { width: 1080px; height: 1350px; }
+.canvas[data-fmt="story"] { width: 1080px; height: 1920px; }
+/* Browser-Vorschau verkleinert; der Render nutzt die echten Pixel */
+.item--preview .canvas { transform: scale(.27); transform-origin: top left; }
+.item--preview[data-fmt="45"] { width: 292px; height: 372px; }
+.item--preview[data-fmt="story"] { width: 292px; height: 528px; }
+
+.canvas::after { /* feine Textur wie auf der Landingpage */
+  content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 4px, transparent 4px 18px);
+}
+.glow {
+  position: absolute; z-index: 1; left: -25%; right: -25%; top: -18%; height: 80%;
+  background: radial-gradient(58% 58% at 68% 26%, rgba(31,111,191,.6), transparent 72%);
+}
+
+/* Foto-Ebene ---------------------------------------------------------- */
+.photo { position: absolute; z-index: 2; inset: 0; }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo::after { /* Verlauf, damit die Typo immer sitzt */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(6,55,99,.5) 0%, rgba(6,55,99,.1) 26%, rgba(6,55,99,.72) 58%, rgba(6,55,99,.97) 84%);
+}
+/* Split-Variante: Foto oben, CI-Fläche unten.
+   Der Verlauf des Fotos endet in genau der Farbe, mit der die Fläche darunter
+   beginnt – sonst entsteht an der Kante eine sichtbare Naht. */
+.canvas--split { background: linear-gradient(180deg, var(--brand) 48%, var(--brand-deep) 78%, var(--brand-900) 100%); }
+.canvas--split[data-fmt="story"] { background: linear-gradient(180deg, var(--brand) 44%, var(--brand-deep) 72%, var(--brand-900) 100%); }
+.canvas--split .photo { bottom: auto; height: 48%; }
+.canvas--split[data-fmt="story"] .photo { height: 44%; }
+.canvas--split .photo::after {
+  background: linear-gradient(180deg, rgba(6,55,99,.34) 0%, rgba(6,55,99,.02) 34%, rgba(10,86,164,.55) 74%, var(--brand) 97%);
+}
+/* Alle Ausgangsfotos sind Landscape (3:2). Ein vollflächiger 9:16-Zuschnitt
+   würde zu stark hineinzoomen – im Story-Format sitzt das Foto deshalb immer
+   oben, nicht über die ganze Fläche. */
+.canvas[data-fmt="story"] { background: linear-gradient(180deg, var(--brand) 46%, var(--brand-deep) 73%, var(--brand-900) 100%); }
+.canvas[data-fmt="story"] .photo { bottom: auto; height: 46%; }
+.canvas[data-fmt="story"] .photo::after {
+  background: linear-gradient(180deg, rgba(6,55,99,.34) 0%, rgba(6,55,99,.02) 34%, rgba(10,86,164,.55) 74%, var(--brand) 97%);
+}
+.canvas[data-fmt="story"] .art { min-height: 18%; }
+
+/* Der Textblock startet unter dem Foto – Gesichter bleiben frei. Bei langen
+   Headlines schrumpft der Freiraum, statt den Footer aus der Fläche zu drücken. */
+.canvas--split .art { flex: 1 1 auto; min-height: 22%; }
+
+/* Inhalt -------------------------------------------------------------- */
+.inner {
+  position: absolute; z-index: 4; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 92px 84px 84px;
+}
+/* Meta blendet in Stories oben/unten UI ein – Inhalt bleibt in der Safe-Zone */
+.canvas[data-fmt="story"] .inner { padding: 280px 84px 330px; }
+
+.art { flex: 1; min-height: 0; padding-bottom: 36px; display: flex; flex-direction: column; justify-content: center; }
+.art svg { width: 100%; height: 100%; }
+.block { flex: none; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 15px;
+  font: 700 26px/1 var(--body); letter-spacing: .17em; text-transform: uppercase; color: #d7e7fa;
+  padding: 17px 30px; border-radius: 999px;
+  background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.26);
+  margin-bottom: 30px;
+}
+.eyebrow b { width: 13px; height: 13px; border-radius: 50%; background: var(--sky); }
+
+.head {
+  font-family: var(--display); font-weight: 800;
+  font-size: 98px; line-height: 1.02; letter-spacing: -.018em;
+  text-wrap: balance;
+}
+.head--l { font-size: 86px; }
+.head--m { font-size: 76px; }
+.canvas[data-fmt="story"] .head { font-size: 104px; }
+.canvas[data-fmt="story"] .head--l { font-size: 92px; }
+.canvas[data-fmt="story"] .head--m { font-size: 82px; }
+.head em { font-style: normal; color: var(--sky); display: block; }
+.head .u { position: relative; display: inline-block; }
+.head .u::after {
+  content: ""; position: absolute; left: 2px; right: 2px; bottom: -6px; height: 9px;
+  background: var(--signal); border-radius: 5px;
+}
+
+.sub { margin-top: 32px; max-width: 27ch; font: 500 35px/1.34 var(--body); color: #dceaf9; }
+.canvas[data-fmt="story"] .sub { font-size: 39px; }
+
+.reqs { margin-top: 36px; display: flex; flex-direction: column; gap: 15px; }
+.reqs li { display: flex; align-items: center; gap: 17px; font: 600 31px/1.2 var(--body); color: #eaf2fb; list-style: none; }
+.reqs svg { flex: none; color: var(--sky); }
+
+.cta {
+  margin-top: 46px; display: inline-flex; align-items: center; gap: 20px;
+  background: #fff; color: var(--brand); font: 700 35px/1 var(--body);
+  padding: 32px 44px; border-radius: 999px;
+  box-shadow: 0 26px 60px -22px rgba(0,0,0,.6);
+}
+.cta--ghost { background: rgba(255,255,255,.14); color: #fff; border: 2px solid rgba(255,255,255,.6); box-shadow: none; }
+
+.foot {
+  flex: none; margin-top: 54px; padding-top: 34px;
+  border-top: 2px solid rgba(255,255,255,.18);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 30px;
+}
+.mark { display: flex; flex-direction: column; line-height: 1; }
+.mark__name { font: 600 23px/1 var(--display); letter-spacing: .05em; color: rgba(255,255,255,.74); }
+.mark__word { font: 700 40px/1 var(--display); color: #fff; margin-top: 7px; }
+.mark__swoosh { width: 100%; height: 10px; margin-top: 5px; color: rgba(255,255,255,.62); }
+.place { font: 600 25px/1.35 var(--body); color: #c4daf2; text-align: right; }
+
+/* Drei-Phasen-Motiv (L1/L2/L3/N/PE in den echten Aderfarben) ---------- */
+.phases { display: flex; flex-direction: column; gap: 30px; }
+.phases i { display: block; height: 26px; border-radius: 13px; }
+.phases .l1 { background: #8a5a2b; width: 88%; }
+.phases .l2 { background: #14181d; width: 100%; box-shadow: 0 0 0 3px rgba(255,255,255,.16); }
+.phases .l3 { background: #a1a7ad; width: 76%; }
+.phases .n  { background: #2f6fd0; width: 62%; }
+.phases .pe { background: repeating-linear-gradient(68deg, #1f8f3a 0 26px, #f2c200 26px 52px); width: 48%; }
+.phases span { font: 700 26px/1 var(--body); color: rgba(255,255,255,.6); letter-spacing: .1em; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet"></div>
+
+<script>
+/* ======================================================================
+   STELLE + KONZEPTE
+   Bewusst kein „Wir suchen …": jedes Motiv spricht die Qualifikation oder
+   den Bewerbungsaufwand an – das filtert schon in der Anzeige vor.
+   ====================================================================== */
+const JOB = {
+  titel: "Industrieelektriker (m/w/d)",
+  aufgabe: "Elektromontage & Verdrahtung",
+  ort: "Allensbach",
+  region: "Allensbach am Bodensee",
+};
+
+const ARROW = '<svg viewBox="0 0 24 24" width="33" height="33" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M20 6 9 17l-5-5"/></svg>';
+
+/* Stromlaufplan: zwei Schienen, drei Strompfade – der mittlere ist offen.
+   Das Fragezeichen sitzt im SVG, damit es in jedem Format an der Lücke bleibt. */
+function planSvg() {
+  const rungs = [190, 370, 550];
+  return `<svg viewBox="0 0 1080 740" preserveAspectRatio="xMidYMid meet" fill="none"
+      stroke="#9dc8f2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <g opacity=".45">
+      <path d="M90 90 H990 M90 90 V680 M990 90 V680"/>
+      <path d="M90 680 H990" stroke-dasharray="2 26"/>
+    </g>
+    ${rungs.map((y, i) => {
+      const offen = i === 1;
+      return `<g opacity="${offen ? "1" : ".45"}">
+        <path d="M90 ${y} H${offen ? 400 : 430}"/>
+        ${offen
+          ? `<path d="M400 ${y} H680" stroke="#ffcf5c" stroke-width="7" stroke-dasharray="16 26"/>
+             <circle cx="400" cy="${y}" r="15" fill="#ffcf5c" stroke="none"/>
+             <circle cx="680" cy="${y}" r="15" fill="#ffcf5c" stroke="none"/>
+             <text x="540" y="${y - 46}" fill="#ffcf5c" stroke="none"
+                   font-family="Poppins, sans-serif" font-weight="800" font-size="86"
+                   text-anchor="middle">?</text>`
+          : `<path d="M430 ${y} l58 -38"/><path d="M430 ${y} H540"/>`}
+        <path d="M680 ${y} H790"/>
+        <rect x="790" y="${y - 36}" width="150" height="72" rx="12"/>
+        <path d="M790 ${y - 36} 940 ${y + 36} M790 ${y + 36} 940 ${y - 36}" opacity=".45" stroke-width="3.5"/>
+        <path d="M940 ${y} H990"/>
+      </g>`;
+    }).join("")}
+    <g opacity=".38">
+      ${[0,1,2,3,4,5,6,7].map((k) => `<rect x="${150 + k * 96}" y="620" width="62" height="60" rx="8"/>`).join("")}
+    </g>
+  </svg>`;
+}
+
+const CONCEPTS = [
+  {
+    name: "fehlt-hier-was",
+    hinweis: "Offene Klemme im Stromlaufplan – funktioniert ohne Foto",
+    art: () => `<div class="plan">${planSvg()}</div>`,
+    block: () => `
+      <span class="eyebrow"><b></b>${JOB.ort}</span>
+      <h1 class="head">Fehlt hier was?<em>Genau: du.</em></h1>
+      <p class="sub">${JOB.titel} für ${JOB.aufgabe}.</p>
+      <span class="cta">5 Fragen statt Bewerbungsmappe ${ARROW}</span>`,
+  },
+  {
+    name: "l2-farbe",
+    hinweis: "Insider-Frage in den echten Aderfarben – filtert vor",
+    art: () => `
+      <div class="phases">
+        <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="n"></i><i class="pe"></i>
+        <span>L1 · L2 · L3 · N · PE</span>
+      </div>`,
+    block: () => `
+      <h1 class="head head--l">Du weißt, welche Farbe <span class="u">L2</span> hat?<em>Dann müssen wir nicht viel erklären.</em></h1>
+      <p class="sub">${JOB.titel} · ${JOB.aufgabe} · ${JOB.ort}</p>
+      <span class="cta">In 60 Sekunden bewerben ${ARROW}</span>`,
+  },
+  {
+    name: "team-daumen",
+    hinweis: "Foto team.jpg – echte Gesichter, stärkster Vertrauensanker",
+    split: true,
+    photo: "team.jpg",
+    photoPos: "50% 28%",
+    block: () => `
+      <h1 class="head head--l">Drei Daumen hoch.<em>Einer fehlt noch.</em></h1>
+      <p class="sub">${JOB.titel} · ${JOB.aufgabe} · ${JOB.ort}</p>
+      <span class="cta">Passt das? 5 Fragen, 60 Sekunden ${ARROW}</span>`,
+  },
+  {
+    name: "kein-band-kein-buero",
+    hinweis: "Foto elektromontage.jpg – zeigt genau den Arbeitsplatz",
+    photo: "elektromontage.jpg",
+    photoPos: "42% 40%",
+    block: () => `
+      <span class="eyebrow"><b></b>${JOB.aufgabe}</span>
+      <h1 class="head head--l">Kein Band. Kein Büro.<em>Dein Schaltschrank.</em></h1>
+      <ul class="reqs">
+        <li>${CHECK} Ausbildung als Elektriker</li>
+        <li>${CHECK} Schaltplan sicher lesen</li>
+        <li>${CHECK} Deutsch ab B1</li>
+      </ul>
+      <span class="cta">Mini-Check starten ${ARROW}</span>`,
+  },
+  {
+    name: "kaffeepause",
+    hinweis: "Foto kollege-ok.jpg – Anti-Aufwand-Motiv, ideal fürs Retargeting",
+    split: true,
+    photo: "kollege-ok.jpg",
+    photoPos: "45% 22%",
+    block: () => `
+      <h1 class="head head--m">Deine Bewerbung passt in eine <span class="u">Kaffeepause</span>.</h1>
+      <p class="sub">Kein Anschreiben, kein Lebenslauf nötig – 5 Fragen, dann melden wir uns.</p>
+      <span class="cta cta--ghost">${JOB.titel} · ${JOB.ort} ${ARROW}</span>`,
+  },
+];
+
+/* ---------------------------------------------------------------------- */
+const MARK = `
+  <div class="mark">
+    <span class="mark__name">Wilfried von Briel</span>
+    <span class="mark__word">Maschinenbau</span>
+    <svg class="mark__swoosh" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none"><path d="M1 2c40 5 118 5 198 -1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </div>`;
+
+const FORMATS = [
+  { key: "45", label: "Feed 4:5 · 1080×1350" },
+  { key: "story", label: "Story/Reels 9:16 · 1080×1920" },
+];
+
+const preview = !location.search.includes("render=1");
+const sheet = document.getElementById("sheet");
+
+CONCEPTS.forEach((c) => {
+  FORMATS.forEach((f) => {
+    const item = document.createElement("div");
+    item.className = "item" + (preview ? " item--preview" : "");
+    item.dataset.fmt = f.key;
+    item.innerHTML = `
+      ${preview ? `<div class="item__name">${c.name} · ${f.label}<br><span class="item__hint">${c.hinweis}</span></div>` : ""}
+      <div class="canvas ${c.split ? "canvas--split" : ""}" data-fmt="${f.key}" data-name="${c.name}-${f.key}">
+        <div class="glow"></div>
+        ${c.photo ? `<div class="photo" data-shot><img src="../assets/${c.photo}" style="object-position:${c.photoPos || "50% 40%"}" alt="" /></div>` : ""}
+        <div class="inner">
+          <div class="art">${c.art ? c.art(f.key) : ""}</div>
+          <div class="block">${c.block(f.key)}</div>
+          <div class="foot">
+            ${MARK}
+            <span class="place">${JOB.region}<br>vonbriel-maschinenbau.de</span>
+          </div>
+        </div>
+      </div>`;
+    sheet.appendChild(item);
+  });
+});
+
+/* Fehlt ein Foto, verschwindet die Ebene: dann trägt der CI-Verlauf das Motiv
+   und es entsteht nie ein grauer Kasten im fertigen PNG. */
+document.querySelectorAll("[data-shot] img").forEach((img) => {
+  const drop = () => {
+    const layer = img.closest("[data-shot]");
+    if (!layer || !layer.parentNode) return;
+    const canvas = layer.parentNode;
+    canvas.classList.remove("canvas--split");
+    canvas.classList.add("canvas--nophoto");
+    canvas.removeChild(layer);
+    // Ohne Foto würde die obere Hälfte leer bleiben – dann übernimmt der
+    // Stromlaufplan als Motiv.
+    const art = canvas.querySelector(".art");
+    if (art && !art.children.length) art.innerHTML = `<div class="plan">${planSvg()}</div>`;
+  };
+  img.addEventListener("error", drop, { once: true });
+  if (img.complete && img.naturalWidth === 0) drop();
+});
+</script>
+</body>
+</html>

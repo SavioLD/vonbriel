@@ -89,7 +89,19 @@ komplett aus) – die Seite wirkt also nie kaputt. Erwartete Dateinamen:
 | `assets/kollege-ok.jpg` | Kollege mit OK-Zeichen | Team-Sektion |
 | `assets/werkstatt.jpg` | Anlagenmontage in der Halle | Team-Sektion |
 
-Empfehlung: JPG, längste Kante ca. 1600 px, unter 300 KB pro Bild.
+Empfehlung: JPG, längste Kante ca. 1600–2000 px, unter 300 KB pro Bild.
+Dieselben Dateien nutzen auch die Ad-Creatives.
+
+Die Schriften (Poppins, Inter) liegen ebenfalls unter `assets/fonts/` und werden
+selbst gehostet – kein Google-Fonts-Request, also ein Roundtrip weniger auf dem
+Handy und kein Datenschutz-Thema.
+
+## Ad-Creatives
+
+Passende Anzeigenmotive in 4:5 und Story/Reels liegen unter
+[`creatives/`](creatives/) – fünf Konzepte, gerendert als PNG in
+`creatives/png/`. Details, Konzeptliste und Render-Anleitung stehen in
+[`creatives/README.md`](creatives/README.md).
 
 ## Anpassen
 
