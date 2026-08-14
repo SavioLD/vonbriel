@@ -747,14 +747,23 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .shot--wide { aspect-ratio: 16 / 7; margin-bottom: clamp(24px, 4vw, 36px); }
 
 .team { background: var(--bg); }
-.team__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
-.team__grid .shot { aspect-ratio: 4 / 3; }
-.team__grid .shot--lead { grid-column: span 2; aspect-ratio: 16 / 10; }
+/* 6 Spalten: großes Bild über die volle Breite, darunter drei gleich große
+   Kacheln – so bleibt nie eine einzelne Kachel in der letzten Zeile stehen. */
+.team__grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+.team__grid .shot { grid-column: span 2; aspect-ratio: 4 / 3; }
+.team__grid .shot--lead { grid-column: span 6; aspect-ratio: 16 / 9; }
 
 @media (max-width: 720px) {
   .shot--wide { aspect-ratio: 4 / 3; border-radius: 16px; }
   .team__grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .team__grid .shot { grid-column: span 1; }
   .team__grid .shot--lead { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
+  /* Die letzte Kachel füllt die Zeile, statt halb leer stehen zu bleiben.
+     Mit großem Bild belegt dieses Platz 1, ohne beginnt die Zählung dort. */
+  .team__grid .shot:last-child:nth-child(even),
+  .team__grid:not(:has(.shot--lead)) .shot:last-child:nth-child(odd) {
+    grid-column: 1 / -1; aspect-ratio: 16 / 9;
+  }
   .shot figcaption { padding: 34px 15px 12px; font-size: 13px; }
 }
 
