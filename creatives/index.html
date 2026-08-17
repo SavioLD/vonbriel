@@ -159,6 +159,10 @@ img, svg { display: block; }
   border-top: 2px solid rgba(255,255,255,.18);
   display: flex; align-items: flex-end; justify-content: space-between; gap: 30px;
 }
+/* Original-Logo auf weißer Fläche – das Logo ist blau/grau und würde auf dem
+   CI-Blau untergehen. Unverändert, nicht umgefärbt, nicht beschnitten. */
+.mark--chip { background: #fff; border-radius: 20px; padding: 18px 24px; box-shadow: 0 14px 34px -18px rgba(0,0,0,.5); }
+.mark__img { height: 96px; width: auto; }
 .mark { display: flex; flex-direction: column; line-height: 1; }
 .mark__name { font: 600 23px/1 var(--display); letter-spacing: .05em; color: rgba(255,255,255,.74); }
 .mark__word { font: 700 40px/1 var(--display); color: #fff; margin-top: 7px; }
@@ -294,10 +298,13 @@ const CONCEPTS = [
 
 /* ---------------------------------------------------------------------- */
 const MARK = `
-  <div class="mark">
-    <span class="mark__name">Wilfried von Briel</span>
-    <span class="mark__word">Maschinenbau</span>
-    <svg class="mark__swoosh" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none"><path d="M1 2c40 5 118 5 198 -1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <div class="mark--chip" data-markbox>
+    <img class="mark__img" src="../assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+    <div class="mark" hidden data-logo-fallback>
+      <span class="mark__name">Wilfried von Briel</span>
+      <span class="mark__word">Maschinenbau</span>
+      <svg class="mark__swoosh" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none"><path d="M1 2c40 5 118 5 198 -1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
   </div>`;
 
 const FORMATS = [
@@ -329,6 +336,22 @@ CONCEPTS.forEach((c) => {
       </div>`;
     sheet.appendChild(item);
   });
+});
+
+/* Original-Logo: erst SVG, sonst PNG, erst dann die Text-Wortmarke. */
+document.querySelectorAll("img[data-logo]").forEach((img) => {
+  let versuch = 0;
+  const fehlt = () => {
+    versuch += 1;
+    if (versuch === 1) { img.src = "../assets/logo.png"; return; }
+    const box = img.closest("[data-markbox]");
+    const text = box && box.querySelector("[data-logo-fallback]");
+    if (text) text.hidden = false;
+    if (box) box.classList.remove("mark--chip");
+    img.remove();
+  };
+  img.addEventListener("error", fehlt);
+  if (img.complete && img.naturalWidth === 0) fehlt();
 });
 
 /* Fehlt ein Foto, verschwindet die Ebene: dann trägt der CI-Verlauf das Motiv

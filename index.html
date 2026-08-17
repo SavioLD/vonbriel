@@ -145,15 +145,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .eyebrow--light::before { background: #9dc8f2; }
 
 /* Logo ----------------------------------------------------------------- */
-/* ►► ORIGINAL-LOGO EINSETZEN:
-   Sobald die Logo-Datei (SVG/PNG) im Repo liegt, im HTML einfach die
-   <span class="logo__text">…</span>-Blöcke durch
-   <img class="logo__img" src="logo.svg" alt="Wilfried von Briel Maschinenbau" />
-   ersetzen – die Größen sind hier schon vorbereitet.                        */
+/* Das Original-Logo (assets/logo.svg, sonst assets/logo.png) wird 1:1
+   verwendet – unverändert, unbeschnitten, nicht umgefärbt. Auf dem blauen
+   Footer sitzt es dafür auf einer weißen Fläche (.logo--chip).
+   Die Text-Wortmarke darunter ist nur ein Notfall-Fallback, falls die Datei
+   fehlt (siehe setupLogo()).                                              */
 .logo { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
-.logo__img { height: 46px; width: auto; display: block; }
-.logo--chip { background: #fff; padding: 10px 16px; border-radius: 12px; box-shadow: 0 6px 18px -8px rgba(0,0,0,.35); }
-.logo--chip .logo__img { height: 38px; }
+.logo__img { height: 58px; width: auto; display: block; }
+.logo--chip { background: #fff; padding: 12px 18px; border-radius: 14px; box-shadow: 0 6px 18px -8px rgba(0,0,0,.35); }
+.logo--chip .logo__img { height: 62px; }
 .logo__text { display: flex; flex-direction: column; line-height: 1; }
 /* Wortmarke im Stil des Briel-Logos: Name in Grau, „Maschinenbau" in CI-Blau */
 .logo__name {
@@ -217,7 +217,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   backdrop-filter: saturate(160%) blur(10px);
   border-bottom: 1px solid var(--line);
 }
-.topbar__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+.topbar__inner { display: flex; align-items: center; justify-content: space-between; min-height: 82px; padding-block: 9px; gap: 16px; }
 .topbar__cta { font-size: 14.5px; padding: 11px 20px; }
 .topbar__phone {
   display: inline-flex; align-items: center; gap: 8px;
@@ -649,8 +649,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 720px) {
   body { font-size: 16px; }
   .topbar__cta, .topbar__phone { display: none; }
-  .topbar__inner { height: 58px; }
-  .topbar .logo__img { height: 34px; }
+  .topbar__inner { min-height: 66px; padding-block: 7px; }
+  .topbar .logo__img { height: 48px; }
 
   /* Hero kompakt → Frage 1 möglichst weit oben */
   .hero__inner { padding-block: 14px 22px; row-gap: 14px; }
@@ -848,7 +848,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 <header class="topbar">
   <div class="shell topbar__inner">
     <a href="index.html" class="logo" aria-label="Wilfried von Briel Maschinenbau">
-      <span class="logo__text">
+      <img class="logo__img" src="assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+      <span class="logo__text" hidden data-logo-fallback>
         <span class="logo__name">Wilfried von Briel</span>
         <span class="logo__word">Maschinenbau</span>
         <svg class="logo__swoosh" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M1 2c40 5 118 5 198 -1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1050,7 +1051,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     <div class="footer__grid">
       <div class="footer__brand">
         <span class="logo logo--chip">
-          <span class="logo__text">
+          <img class="logo__img" src="assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+          <span class="logo__text" hidden data-logo-fallback>
             <span class="logo__name">Wilfried von Briel</span>
             <span class="logo__word">Maschinenbau</span>
             <svg class="logo__swoosh" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M1 2c40 5 118 5 198 -1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1418,10 +1420,32 @@ function loadJob(key) {
   renderFunnel();
   attachCtas();
   setupStickyCta();
+  setupLogo();
   setupShots();
   setupReveal();
   document.title = `${state.job.title} ${state.job.gender} – Karriere bei Wilfried von Briel Maschinenbau`;
   track("funnel_view");
+}
+
+/* Original-Logo laden: erst assets/logo.svg, sonst assets/logo.png. Erst wenn
+   beide fehlen, erscheint die Text-Wortmarke – so steht nie ein leeres Bild
+   im Kopf der Seite. */
+function setupLogo() {
+  document.querySelectorAll("img[data-logo]").forEach((img) => {
+    let versuch = 0;
+    const fehlt = () => {
+      versuch += 1;
+      if (versuch === 1) { img.src = "assets/logo.png"; return; }
+      const box = img.parentNode;
+      const text = box && box.querySelector("[data-logo-fallback]");
+      if (text) text.hidden = false;
+      if (box) box.classList.remove("logo--chip");
+      img.remove();
+    };
+    img.addEventListener("error", fehlt);
+    // Der Fehler kann schon beim Parsen gefeuert haben – dann hier nachziehen.
+    if (img.complete && img.naturalWidth === 0) fehlt();
+  });
 }
 
 /* Fehlende Bilddateien sauber wegräumen: Kachel entfernen, und wenn dadurch
