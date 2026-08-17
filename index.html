@@ -151,9 +151,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    Die Text-Wortmarke darunter ist nur ein Notfall-Fallback, falls die Datei
    fehlt (siehe setupLogo()).                                              */
 .logo { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
-.logo__img { height: 58px; width: auto; display: block; }
+.logo__img { height: 64px; width: auto; display: block; }
 .logo--chip { background: #fff; padding: 12px 18px; border-radius: 14px; box-shadow: 0 6px 18px -8px rgba(0,0,0,.35); }
-.logo--chip .logo__img { height: 62px; }
+.logo--chip .logo__img { height: 66px; }
 .logo__text { display: flex; flex-direction: column; line-height: 1; }
 /* Wortmarke im Stil des Briel-Logos: Name in Grau, „Maschinenbau" in CI-Blau */
 .logo__name {
@@ -650,7 +650,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   body { font-size: 16px; }
   .topbar__cta, .topbar__phone { display: none; }
   .topbar__inner { min-height: 66px; padding-block: 7px; }
-  .topbar .logo__img { height: 48px; }
+  .topbar .logo__img { height: 50px; }
 
   /* Hero kompakt → Frage 1 möglichst weit oben */
   .hero__inner { padding-block: 14px 22px; row-gap: 14px; }
@@ -848,7 +848,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 <header class="topbar">
   <div class="shell topbar__inner">
     <a href="index.html" class="logo" aria-label="Wilfried von Briel Maschinenbau">
-      <img class="logo__img" src="assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+      <img class="logo__img" src="assets/logo.png" alt="Wilfried von Briel Maschinenbau" data-logo />
       <span class="logo__text" hidden data-logo-fallback>
         <span class="logo__name">Wilfried von Briel</span>
         <span class="logo__word">Maschinenbau</span>
@@ -1051,7 +1051,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     <div class="footer__grid">
       <div class="footer__brand">
         <span class="logo logo--chip">
-          <img class="logo__img" src="assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+          <img class="logo__img" src="assets/logo.png" alt="Wilfried von Briel Maschinenbau" data-logo />
           <span class="logo__text" hidden data-logo-fallback>
             <span class="logo__name">Wilfried von Briel</span>
             <span class="logo__word">Maschinenbau</span>
@@ -1435,7 +1435,7 @@ function setupLogo() {
     let versuch = 0;
     const fehlt = () => {
       versuch += 1;
-      if (versuch === 1) { img.src = "assets/logo.png"; return; }
+      if (versuch === 1) { img.src = "assets/logo.svg"; return; }
       if (versuch === 2) { img.src = "assets/logo.jpg"; return; }
       const box = img.parentNode;
       const text = box && box.querySelector("[data-logo-fallback]");

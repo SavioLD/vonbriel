@@ -41,6 +41,7 @@
   --body: "Inter", sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 body { background: #e9eef3; font-family: var(--body); padding: 40px; }
 img, svg { display: block; }
 
@@ -161,8 +162,8 @@ img, svg { display: block; }
 }
 /* Original-Logo auf weißer Fläche – das Logo ist blau/grau und würde auf dem
    CI-Blau untergehen. Unverändert, nicht umgefärbt, nicht beschnitten. */
-.mark--chip { background: #fff; border-radius: 20px; padding: 18px 24px; box-shadow: 0 14px 34px -18px rgba(0,0,0,.5); }
-.mark__img { height: 96px; width: auto; }
+.mark--chip { display: inline-flex; background: #fff; border-radius: 18px; padding: 16px 22px; box-shadow: 0 14px 34px -18px rgba(0,0,0,.5); }
+.mark__img { height: 88px; width: auto; }
 .mark { display: flex; flex-direction: column; line-height: 1; }
 .mark__name { font: 600 23px/1 var(--display); letter-spacing: .05em; color: rgba(255,255,255,.74); }
 .mark__word { font: 700 40px/1 var(--display); color: #fff; margin-top: 7px; }
@@ -170,14 +171,14 @@ img, svg { display: block; }
 .place { font: 600 25px/1.35 var(--body); color: #c4daf2; text-align: right; }
 
 /* Drei-Phasen-Motiv (L1/L2/L3/N/PE in den echten Aderfarben) ---------- */
-.phases { display: flex; flex-direction: column; gap: 30px; }
-.phases i { display: block; height: 26px; border-radius: 13px; }
+.phases { display: flex; flex-direction: column; gap: 22px; }
+.phases i { display: block; height: 22px; border-radius: 11px; }
 .phases .l1 { background: #8a5a2b; width: 88%; }
 .phases .l2 { background: #14181d; width: 100%; box-shadow: 0 0 0 3px rgba(255,255,255,.16); }
 .phases .l3 { background: #a1a7ad; width: 76%; }
 .phases .n  { background: #2f6fd0; width: 62%; }
 .phases .pe { background: repeating-linear-gradient(68deg, #1f8f3a 0 26px, #f2c200 26px 52px); width: 48%; }
-.phases span { font: 700 26px/1 var(--body); color: rgba(255,255,255,.6); letter-spacing: .1em; margin-top: 8px; }
+.phases span { font: 700 24px/1 var(--body); color: rgba(255,255,255,.6); letter-spacing: .1em; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -299,7 +300,7 @@ const CONCEPTS = [
 /* ---------------------------------------------------------------------- */
 const MARK = `
   <div class="mark--chip" data-markbox>
-    <img class="mark__img" src="../assets/logo.svg" alt="Wilfried von Briel Maschinenbau" data-logo />
+    <img class="mark__img" src="../assets/logo.png" alt="Wilfried von Briel Maschinenbau" data-logo />
     <div class="mark" hidden data-logo-fallback>
       <span class="mark__name">Wilfried von Briel</span>
       <span class="mark__word">Maschinenbau</span>
@@ -343,7 +344,7 @@ document.querySelectorAll("img[data-logo]").forEach((img) => {
   let versuch = 0;
   const fehlt = () => {
     versuch += 1;
-    if (versuch === 1) { img.src = "../assets/logo.png"; return; }
+    if (versuch === 1) { img.src = "../assets/logo.svg"; return; }
     if (versuch === 2) { img.src = "../assets/logo.jpg"; return; }
     const box = img.closest("[data-markbox]");
     const text = box && box.querySelector("[data-logo-fallback]");
