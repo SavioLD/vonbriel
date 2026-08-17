@@ -1436,6 +1436,7 @@ function setupLogo() {
     const fehlt = () => {
       versuch += 1;
       if (versuch === 1) { img.src = "assets/logo.png"; return; }
+      if (versuch === 2) { img.src = "assets/logo.jpg"; return; }
       const box = img.parentNode;
       const text = box && box.querySelector("[data-logo-fallback]");
       if (text) text.hidden = false;
