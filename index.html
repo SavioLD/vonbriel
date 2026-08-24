@@ -503,6 +503,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .field input::placeholder, .field textarea::placeholder { color: #9aa8b6; }
 .field label .opt { color: var(--muted); font-weight: 500; }
+.field__hint { font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
 
 /* Datei-Upload (Lebenslauf) */
 .file-field {
@@ -576,6 +577,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   border-radius: var(--radius); padding: 13px 16px;
   font-size: 14.5px; color: var(--ink); font-weight: 600;
 }
+.success__cv { margin-top: 20px; font-size: 14.5px; color: var(--muted); max-width: 46ch; margin-inline: auto; }
 .success__step span {
   flex: none; width: 26px; height: 26px; border-radius: 50%;
   background: var(--navy); color: #fff; display: grid; place-items: center;
@@ -1027,7 +1029,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
           Passt zu dir? Mini-Check starten
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
-        <span class="cols-cta__hint">5 Fragen, keine Bewerbungsmappe – danach wissen wir beide, ob es passt.</span>
+        <span class="cols-cta__hint">5 Fragen vorab – danach wissen wir beide, ob es passt.</span>
       </div>
     </div>
   </section>
@@ -1803,12 +1805,24 @@ function renderForm() {
           <input id="fPlz" name="PLZ" type="text" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" enterkeyhint="done" placeholder="z. B. 78476" />
         </div>
 
-        <!-- Alles Optionale ist eingeklappt: auf dem Handy sind so nur drei
-             Pflichtfelder sichtbar – das kostet am wenigsten Abbrüche. -->
+        <!-- Der Lebenslauf ist ausdrücklich erwünscht und steht deshalb sichtbar
+             im Formular – wer ihn nicht zur Hand hat, reicht ihn später nach. -->
+        <div class="field full">
+          <label for="fCv">Lebenslauf <span class="opt">(gern direkt anhängen)</span></label>
+          <label class="file-field" id="fileLabel">
+            <input id="fCv" name="Lebenslauf" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+            <span class="file-field__ic">${ICON.upload}</span>
+            <span class="file-field__txt" id="fileTxt">PDF, Word oder Foto – max. ${CONFIG.maxUploadMB} MB</span>
+          </label>
+          <p class="field__hint">Nicht zur Hand? Kein Problem – du kannst ihn uns auch später nachreichen.</p>
+        </div>
+
+        <!-- Der Rest ist eingeklappt: auf dem Handy bleibt das Formular kurz,
+             das kostet am wenigsten Abbrüche. -->
         <details class="more" id="moreFields">
           <summary>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
-            Optional hinzufügen: E-Mail, Start, Nachricht &amp; Lebenslauf
+            Optional hinzufügen: E-Mail, Start &amp; Nachricht
           </summary>
           <div class="more__body">
             <div class="field">
@@ -1828,14 +1842,6 @@ function renderForm() {
               <label for="fMsg">Nachricht <span class="opt">(optional)</span></label>
               <textarea id="fMsg" name="Nachricht" placeholder="Gibt es etwas, das wir vorab wissen sollten?"></textarea>
             </div>
-            <div class="field full">
-              <label for="fCv">Lebenslauf / Unterlagen <span class="opt">(optional)</span></label>
-              <label class="file-field" id="fileLabel">
-                <input id="fCv" name="Lebenslauf" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-                <span class="file-field__ic">${ICON.upload}</span>
-                <span class="file-field__txt" id="fileTxt">PDF, Word oder Bild – max. ${CONFIG.maxUploadMB} MB</span>
-              </label>
-            </div>
           </div>
         </details>
 
@@ -1849,7 +1855,7 @@ function renderForm() {
         <div class="form-foot">
           <p class="form-safe">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/></svg>
-            Kein Anschreiben, kein Lebenslauf nötig. Deine Angaben nutzen wir ausschließlich für deine Bewerbung.
+            Kein langes Anschreiben nötig. Deine Angaben nutzen wir ausschließlich für deine Bewerbung.
           </p>
         </div>
       </div>
@@ -1925,6 +1931,7 @@ async function onSubmit(e) {
   const ok = await sendLead(data, file);
   if (ok) {
     state.done = true;
+    state.cvDabei = !!file;
     clearProgress();
     track("bewerbung_gesendet", { qualifikation: computeMatch().text, kontakt: contactPref });
     goTo(totalPos());
@@ -2095,6 +2102,7 @@ function renderSuccess() {
       <div class="success__step"><span>2</span> Kurzes Kennenlern-Telefonat</div>
       <div class="success__step"><span>3</span> Persönliches Gespräch in Allensbach</div>
     </div>
+    ${state.cvDabei ? "" : `<p class="success__cv">Deinen Lebenslauf kannst du uns jederzeit nachreichen – einfach an <a href="mailto:${esc(CONFIG.leadEmail)}">${esc(CONFIG.leadEmail)}</a> oder telefonisch klären.</p>`}
   </div>`;
 }
 
