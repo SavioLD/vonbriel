@@ -18,8 +18,8 @@ kein Build, keine Abhängigkeiten. Aufbau und Funnel-Logik entsprechen der Mause
 
 ## Vorfilter (Knockout-Kriterien)
 
-Der Mini-Check hat 5 Fragen. Drei davon filtern hart vor – wer sie nicht erfüllt, landet auf
-einem freundlichen Absage-Screen und wird **nicht** als Lead übertragen (weder E-Mail noch
+Der Mini-Check hat vier Fragen. Drei davon filtern hart vor – wer sie nicht erfüllt, landet
+auf einem freundlichen Absage-Screen und wird **nicht** als Lead übertragen (weder E-Mail noch
 LeadTable):
 
 | Frage | Voraussetzung | Knockout bei |
@@ -28,9 +28,18 @@ LeadTable):
 | 2 · Schaltplan | Schaltpläne lesen & verstehen (Grundlagen genügen) | „Nein" |
 | 3 · Deutsch | mindestens Niveau B1 | „Nur wenige Worte Deutsch (A1/A2)" |
 
-Nicht filternd, nur zur Einschätzung: Frage 4 (Erfahrung in Elektromontage/Schaltschrankbau)
-und Frage 5 (Führerschein). Aus den bewerteten Antworten entsteht ein Match-Score
-(`Top-Match` / `Guter Match` / `Entwicklungs-Kandidat`), der mit dem Lead übertragen wird.
+Frage 4 (Erfahrung in Elektromontage/Schaltschrankbau) filtert nicht allein, zählt aber für
+die Punktzahl.
+
+**Zusätzlicher Punkte-Filter:** Jede Frage bringt bis zu 2 Punkte, macht 8 insgesamt. Unter
+`minScore` (aktuell **5**) gibt es ebenfalls eine freundliche Absage und keinen Lead. Damit
+fällt genau die Kombination durch, bei der überall die schwächste noch zulässige Antwort
+gewählt wurde: Ausbildung (2) + Schaltplan-Grundlagen (1) + Deutsch B1 (1) + keine
+Montage-Erfahrung (0) = 4 Punkte. Ein einziger besserer Punkt genügt für 5 – dann geht es
+weiter. Der Wert steht im `JOBS`-Objekt und lässt sich jederzeit anpassen (0 = Filter aus).
+
+Aus den bewerteten Antworten entsteht ein Match-Score (`Top-Match` / `Guter Match` /
+`Entwicklungs-Kandidat`), der mit dem Lead übertragen wird.
 
 ## Wohin gehen die Bewerbungen?
 
@@ -58,7 +67,7 @@ Die Seite ist mobil-first gebaut – der Großteil des Ad-Traffics kommt vom Han
 - **Kein Fortschrittsverlust:** Antworten liegen in der `sessionStorage`. Wer
   die App wechselt oder neu lädt, landet wieder in derselben Frage.
 - **Sticky-Button als Wiederaufnahme-Anker:** solange die Karte nicht im Bild
-  ist, zeigt er „Weiter – Frage 3 von 5"; nach dem Absenden verschwindet er.
+  ist, zeigt er „Weiter – Frage 3 von 4"; nach dem Absenden verschwindet er.
 - **Telefon-Ausweg** unter dem Absende-Button – wer nicht tippen will, ruft an.
 - **Effekte als Feedback, nicht als Deko:** Haken-Animation auf der gewählten
   Antwort, Richtungs-Animation der Schritte (vor/zurück), Lichtreflex auf dem
@@ -111,10 +120,10 @@ Passende Anzeigenmotive in 4:5 und Story/Reels liegen unter
 - **Ad-Varianten (Message-Match):** `heroVariants` – Aufruf über `?v=fit` (Default),
   `?v=region`, `?v=team`.
 - **Farben:** CSS-Variablen im `:root`-Block (`--navy`, `--accent`, `--steel`).
-- **Logo:** aktuell als Wortmarke in HTML/CSS umgesetzt. Sobald die Original-Datei vorliegt:
-  `logo.svg` ins Repo legen und die beiden `<span class="logo__text">…</span>`-Blöcke
-  (Topbar und Footer) durch
-  `<img class="logo__img" src="logo.svg" alt="Wilfried von Briel Maschinenbau" />` ersetzen.
+- **Logo:** liegt als `assets/logo.png` (freigestellt, beschnitten) und wird 1:1 verwendet.
+  Die Ladekette probiert `logo.png`, dann `logo.svg`, dann `logo.jpg`; erst wenn alle fehlen,
+  erscheint eine Text-Wortmarke als Notfall.
+- **Vorfilter:** `minScore` und die Fragen im `JOBS`-Objekt – siehe Abschnitt Vorfilter.
 
 ## Offene Punkte (mit Briel abstimmen)
 

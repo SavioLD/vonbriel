@@ -908,7 +908,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
           <div class="funnel__body" id="funnelBody" aria-live="polite"><!-- JS --></div>
         </div>
         <p class="funnel__reassure">
-          <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 5 kurze Fragen</span>
+          <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 4 kurze Fragen</span>
           <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> kein Anschreiben nötig</span>
           <span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 100 % unverbindlich</span>
         </p>
@@ -1029,7 +1029,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
           Passt zu dir? Mini-Check starten
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
-        <span class="cols-cta__hint">5 Fragen vorab – danach wissen wir beide, ob es passt.</span>
+        <span class="cols-cta__hint">4 Fragen vorab – danach wissen wir beide, ob es passt.</span>
       </div>
     </div>
   </section>
@@ -1195,13 +1195,20 @@ const JOBS = {
       "Langfristige Perspektive im Maschinenbau",
     ],
 
+    /* Mindest-Punktzahl, um zum Bewerbungsformular zu kommen.
+       Vier Fragen à maximal 2 Punkte = 8 Punkte. Wer überall die schwächste
+       noch zulässige Antwort wählt (Ausbildung 2 + Schaltplan-Grundlagen 1 +
+       Deutsch B1 1 + keine Montage-Erfahrung 0), landet bei 4 und bekommt eine
+       freundliche Absage. Ein einziger besserer Punkt genügt für 5 – dann geht
+       es weiter. Wert erhöhen = strenger, auf 0 setzen = Filter aus.         */
+    minScore: 5,
+
     /* Vorqualifizierungs-Fragen.
        scored:true  → fließt in den Match-Score ein (Optionen tragen "score" 0–2)
-       scored:false → reine Info (z. B. Führerschein)
        option.ko:true → Knockout (sofortige Absage, kein Lead)
 
        Die drei harten Filter sind Frage 1 (Ausbildung), Frage 2 (Schaltplan)
-       und Frage 3 (Deutsch ab B1).                                          */
+       und Frage 3 (Deutsch ab B1); Frage 4 zählt nur für die Punktzahl.      */
     questions: [
       {
         short: "Ausbildung",
@@ -1253,16 +1260,6 @@ const JOBS = {
           { label: "Nein, noch nicht", score: 0 },
         ],
       },
-      {
-        short: "Führerschein",
-        q: "Hast du einen Führerschein (Klasse B)?",
-        help: "Kein absolutes Muss – wir fragen nur kurz nach.",
-        scored: false,
-        options: [
-          { label: "Ja", score: 0 },
-          { label: "Nein", score: 0 },
-        ],
-      },
     ],
   },
 
@@ -1305,7 +1302,7 @@ const ICON = {
 /* ----------------------------------------------------------------------
    STATE
 ---------------------------------------------------------------------- */
-const state = { jobKey: null, job: null, pos: 1, answers: {}, rejected: false, koReason: "", koFromPos: 1, variant: "fit", started: false, done: false, dir: "fwd", _updateSticky: null };
+const state = { jobKey: null, job: null, pos: 1, answers: {}, rejected: false, koReason: "", koTyp: "", koFromPos: 1, variant: "fit", started: false, done: false, dir: "fwd", _updateSticky: null };
 
 const REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1632,9 +1629,26 @@ function renderFunnel() {
     return;
   }
   if (state.pos === N + 1) {
+    // Punkte-Filter: Wer überall die schwächste zulässige Antwort gewählt hat,
+    // kommt gar nicht erst zum Formular, sondern bekommt eine freundliche
+    // Absage – und wird nicht als Lead gesendet.
+    const m = computeMatch();
+    if (j.minScore && m.score < j.minScore) {
+      state.rejected = true;
+      state.koTyp = "score";
+      state.koFromPos = N; // „Antwort ändern" führt zur letzten Frage zurück
+      track("funnel_absage", { grund: "punkte", score: m.score, max: m.max });
+      clearProgress();
+      setBar(100);
+      body.innerHTML = renderReject();
+      bindReject();
+      if (state._updateSticky) state._updateSticky();
+      return;
+    }
+    state.koTyp = "";
     body.innerHTML = renderForm();
     bindForm();
-    track("funnel_formular", { qualifikation: computeMatch().text });
+    track("funnel_formular", { qualifikation: m.text });
     if (state._updateSticky) state._updateSticky();
     return;
   }
@@ -1709,6 +1723,7 @@ function bindQuestion() {
         // Knockout → sofortige Absage
         if (opt.ko) {
           state.koReason = opt.koReason || "die nötigen Voraussetzungen";
+          state.koTyp = "ko";
           state.koFromPos = state.pos;
           track("funnel_absage", { frage: q.short, grund: state.koReason });
           clearProgress();
@@ -1725,13 +1740,19 @@ function bindQuestion() {
 /* ----- Absage (Knockout) ----- */
 function renderReject() {
   const j = state.job;
+  // Zwei Absage-Gründe: eine harte Voraussetzung fehlt (ko) oder die Antworten
+  // liegen insgesamt unter der Mindestpunktzahl (score).
+  const text = state.koTyp === "score"
+    ? `<p>Nach deinen Angaben passt es für die Stelle als <strong>${esc(j.title)}</strong> aktuell noch nicht ganz – für die Elektromontage brauchst du etwas mehr Sicherheit beim Schaltplan oder Praxis aus dem Elektrobereich.</p>
+       <p class="reject__soft">Das kann sich ändern: Wenn du in einem der Punkte weiterkommst, freuen wir uns über deine Bewerbung. Hast du dich vertippt? Dann korrigiere deine Antwort gerne.</p>`
+    : `<p>Diesmal hat es leider noch nicht ganz gepasst: Für die Stelle als <strong>${esc(j.title)}</strong> setzen wir <strong>${esc(state.koReason)}</strong> voraus.</p>
+       <p class="reject__soft">Vielleicht klappt es zu einem späteren Zeitpunkt oder bei einer anderen Position – schau gerne wieder vorbei.</p>`;
   return `<div class="step reject">
     <div class="reject__ic">
       <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/><path d="M9 12h6"/></svg>
     </div>
-    <h3>Vielen Dank für dein Interesse!</h3>
-    <p>Diesmal hat es leider noch nicht ganz gepasst: Für die Stelle als <strong>${esc(j.title)}</strong> setzen wir <strong>${esc(state.koReason)}</strong> voraus.</p>
-    <p class="reject__soft">Vielleicht klappt es zu einem späteren Zeitpunkt oder bei einer anderen Position – schau gerne wieder vorbei.</p>
+    <h3>Vielen Dank für deine Antworten!</h3>
+    ${text}
     <button type="button" class="funnel__back reject__back" data-fix>${ICON.back} Antwort ändern</button>
   </div>`;
 }

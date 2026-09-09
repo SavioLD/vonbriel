@@ -56,7 +56,7 @@ die schwächsten abschalten statt früher einzugreifen.
 >
 > Passt, wenn du eine abgeschlossene Ausbildung als Elektriker hast, Schaltpläne sicher liest und dich auf Deutsch verständigst (ab B1).
 >
-> 5 Fragen beantworten – danach wisst ihr beide, ob es passt.
+> 4 Fragen beantworten – danach wisst ihr beide, ob es passt.
 
 **Überschrift:** Industrieelektriker (m/w/d)
 **Beschreibung:** Allensbach · Vollzeit · ab sofort
@@ -75,7 +75,7 @@ die schwächsten abschalten statt früher einzugreifen.
 >
 > Ausbildung als Elektriker, Schaltplan sicher, Deutsch ab B1 – mehr braucht es nicht für den ersten Schritt.
 >
-> 60 Sekunden, 5 Fragen. Deinen Lebenslauf hängst du direkt an oder reichst ihn nach.
+> 60 Sekunden, 4 Fragen. Deinen Lebenslauf hängst du direkt an oder reichst ihn nach.
 
 **Überschrift:** Elektriker? Dann reden wir.
 **Beschreibung:** Elektromontage & Verdrahtung
@@ -113,7 +113,7 @@ die schwächsten abschalten statt früher einzugreifen.
 >
 > Frei ist der Platz für einen Industrieelektriker (m/w/d) in Elektromontage und Verdrahtung – mit abgeschlossener Ausbildung, sicherem Blick für Schaltpläne und Deutsch ab B1.
 >
-> 5 Fragen, dann wissen wir beide, ob es passt.
+> 4 Fragen, dann wissen wir beide, ob es passt.
 
 **Überschrift:** Ein Team, das zusammenhält
 **Beschreibung:** Industrieelektriker (m/w/d)
@@ -128,7 +128,7 @@ die schwächsten abschalten statt früher einzugreifen.
 **Primärtext**
 > Du warst schon mal auf unserer Seite – und dann kam der Alltag dazwischen. Kennen wir.
 >
-> Die Bewerbung bei uns dauert wirklich nur eine Kaffeepause: 5 Fragen, deine Nummer, fertig. Kein langes Anschreiben. Den Lebenslauf kannst du direkt anhängen oder später nachreichen.
+> Die Bewerbung bei uns dauert wirklich nur eine Kaffeepause: 4 Fragen, deine Nummer, fertig. Kein langes Anschreiben. Den Lebenslauf kannst du direkt anhängen oder später nachreichen.
 >
 > Industrieelektriker (m/w/d) für Elektromontage & Verdrahtung in Allensbach.
 
@@ -141,10 +141,10 @@ die schwächsten abschalten statt früher einzugreifen.
 
 Für Reels/Stories, wo nur ein bis zwei Zeilen sichtbar sind:
 
-- „Elektriker in der Region? In Allensbach wartet ein Schaltschrank auf dich. 5 Fragen, dann melden wir uns."
+- „Elektriker in der Region? In Allensbach wartet ein Schaltschrank auf dich. 4 Fragen, dann melden wir uns."
 - „Ausbildung als Elektriker + Schaltplan sicher lesen? Dann passt der Rest meistens auch."
 - „Maschinen aufbauen statt Serie schrauben – Industrieelektriker (m/w/d) in Allensbach."
-- „Bewerben dauert eine Kaffeepause: 5 Fragen – den Lebenslauf kannst du nachreichen."
+- „Bewerben dauert eine Kaffeepause: 4 Fragen – den Lebenslauf kannst du nachreichen."
 
 ## Was die Anzeigen bewusst NICHT sagen
 
