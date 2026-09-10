@@ -2050,37 +2050,32 @@ function collectPayload(data) {
 function postWebhook(data) {
   if (!CONFIG.leadWebhookUrl) return;
   const j = state.job;
-  const lead = buildLead(data);
-  // Deutsche Klartext-Keys (für Lesbarkeit) + Standard-Aliase (für automatisches
-  // Field-Mapping in LeadTable/CRM).
-  const payload = Object.assign({}, lead, {
+  const m = computeMatch();
+  const msg = $("#fMsg").value.trim();
+
+  /* WICHTIG – genau EIN Schlüssel je Wert.
+     LeadTable legt aus mehreren Schlüsseln mit demselben Inhalt keine
+     Alternativen an, sondern hängt alle Werte im selben Feld aneinander
+     („WhatsApp WhatsApp WhatsApp"). Deshalb keine Aliase mehr.
+     Zuerst die Standardfelder, die LeadTable von sich aus erkennt, danach die
+     eigenen Spalten. Die Antworten tragen ein „Frage n:" davor, damit sie
+     nicht als Namensbestandteil gelesen werden. */
+  const payload = {
     name: data.name,
     phone: data.phone,
     email: data.email || "",
     zip: data.plz,
-    preferred_contact: data.contactPref || "Anruf",
-    message: lead["Nachricht"] || "",
-    job: `${j.title} ${j.gender}`,
-    variant: state.variant,
-    qualification: lead["Qualifikation"],
-    source: CONFIG.quelle,
+  };
+  payload["Stelle"] = `${j.title} ${j.gender}`;
+  payload["Kontakt bevorzugt"] = data.contactPref || "Anruf";
+  payload["Frühester Start"] = $("#fStart").value;
+  if (msg) payload["Nachricht"] = msg;
+  payload["Qualifikation"] = m.text;
+  j.questions.forEach((q, i) => {
+    payload[`Frage ${i + 1}: ${q.short}`] = (state.answers[q.short] || {}).label || "—";
   });
-  // Antworten zusätzlich mit sauberen Keys (ohne Umlaute/Sonderzeichen), damit sie
-  // sich in LeadTable leicht als eigene Spalten anlegen/mappen lassen.
-  const deumlaut = (s) => String(s).replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
-  const slug = (s) => deumlaut(s).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-  j.questions.forEach((q) => {
-    const v = (state.answers[q.short] || {}).label || "";
-    payload[q.short] = v;                     // lesbarer Key = exakt der Feldname zum Anlegen in LeadTable
-    payload["antwort_" + slug(q.short)] = v;  // ASCII-Fallback
-  });
-  payload["Match-Score"] = lead["Qualifikation"];
-  payload["match_score"] = lead["Qualifikation"];
-  payload["Wunsch-Kontakt"] = data.contactPref || "Anruf";
   payload["Kampagne"] = state.variant;
-  // Namensdopplung vermeiden: LeadTables Name-Feld sammelt alle Namens-Keys ein.
-  // Nur der eine `name`-Key soll rein – die deutsche Dublette entfernen.
-  delete payload["Name"];
+  payload["Quelle"] = CONFIG.quelle;
 
   const body = JSON.stringify(payload);
   // Fallback: preflight-freier Versand (einfache Anfrage), falls CORS blockt.
