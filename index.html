@@ -241,6 +241,18 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   opacity: .5;
   pointer-events: none;
 }
+/* Foto-Ebene im Hero: liegt unter dem Inhalt (z-index 1) und bekommt einen
+   kräftigen CI-Verlauf, damit Headline und Karte klar lesbar bleiben. */
+.hero__media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+/* Zuschnitt so, dass der Kollege rechts hinter der Karte sitzt und links
+   Platz für die Headline bleibt. */
+.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 20% 45%; }
+.hero__media::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(100deg, rgba(6,55,99,.93) 0%, rgba(8,71,132,.8) 42%, rgba(6,55,99,.5) 76%, rgba(6,55,99,.42) 100%),
+    linear-gradient(180deg, rgba(6,55,99,.3) 0%, transparent 32%, rgba(6,55,99,.55) 100%);
+}
 .hero__inner {
   position: relative;
   z-index: 1;
@@ -274,6 +286,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   margin-bottom: 16px;
 }
 .hero h1 em { color: #7db2ee; font-style: normal; }
+.hero h1, .hero__sub { text-shadow: 0 2px 14px rgba(4,38,68,.5); }
 .hero__sub { font-size: clamp(16px, 1.7vw, 19px); color: #c6d9ee; max-width: 42ch; margin-bottom: 0; }
 .hero__trust { display: grid; gap: 11px; align-self: start; }
 .hero__trust li {
@@ -798,6 +811,16 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   }
   .hero__badges::-webkit-scrollbar { display: none; }
   .hero__badge { flex: none; }
+  /* Foto als sichtbares Band hinter Badges und Headline. Es liegt hinter dem
+     Inhalt, kostet also keine Höhe – Frage 1 bleibt im ersten Bildschirm. */
+  .hero__media { bottom: auto; height: 252px; }
+  .hero__media img { object-position: 46% 38%; }
+  .hero__media::after {
+    background: linear-gradient(180deg,
+      rgba(6,55,99,.44) 0%, rgba(6,55,99,.62) 46%,
+      rgba(8,71,132,.93) 82%, rgba(8,71,132,1) 100%);
+  }
+
   /* Karte nutzt die volle Breite – mehr Platz für Antwort-Texte */
   .funnel-wrap { margin-inline: calc(var(--gutter) * -0.5); width: auto; }
   .funnel { border-radius: 18px; }
@@ -888,6 +911,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
   <!-- HERO + MINI-CHECK (sofort aktiv) -->
   <section class="hero">
+    <!-- Echtes Werkstattfoto hinter dem Hero, damit oben nicht nur Blau steht.
+         Fällt die Datei aus, bleibt der CI-Verlauf stehen (siehe setupShots). -->
+    <div class="hero__media" aria-hidden="true">
+      <img src="assets/elektromontage.jpg" alt="" data-optional
+           fetchpriority="high" decoding="async" width="1800" height="1201" />
+    </div>
     <div class="shell hero__inner">
       <div class="hero__intro">
         <div class="hero__badges" id="heroBadges"><!-- JS --></div>
@@ -961,11 +990,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
         <p id="detailsLead"><!-- JS --></p>
       </div>
 
-      <!-- Kernfoto: Elektromontage am offenen Schaltschrank -->
+      <!-- Werkstatt-Motiv (das Schaltschrank-Foto trägt bereits den Hero) -->
       <figure class="shot shot--wide reveal" data-shot>
-        <img src="assets/elektromontage.jpg" alt="Mitarbeiter von Wilfried von Briel Maschinenbau bei der Elektromontage an einem offenen Schaltschrank"
-             style="object-position: 45% 50%" loading="lazy" decoding="async" width="1600" height="1067" />
-        <figcaption>Schaltschrank auf, Plan daneben – so sieht dein Arbeitstag bei uns aus.</figcaption>
+        <img src="assets/werkstatt.jpg" alt="Anlagenmontage in der Werkstatt von Wilfried von Briel Maschinenbau in Allensbach"
+             style="object-position: 50% 45%" loading="lazy" decoding="async" width="1800" height="1201" />
+        <figcaption>Hier entstehen die Anlagen, die du elektrisch zum Laufen bringst.</figcaption>
       </figure>
 
       <div class="cols">
@@ -1019,9 +1048,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
                style="object-position: 45% 30%" loading="lazy" decoding="async" width="1600" height="1067" />
         </figure>
         <figure class="shot reveal" data-shot>
-          <img src="assets/werkstatt.jpg" alt="Montage von Anlagen in der Werkstatt in Allensbach"
-               style="object-position: 50% 45%" loading="lazy" decoding="async" width="1600" height="1067" />
-          <figcaption>Anlagenbau in Allensbach</figcaption>
+          <img src="assets/elektromontage.jpg" alt="Mitarbeiter bei der Elektromontage an einem offenen Schaltschrank"
+               style="object-position: 45% 50%" loading="lazy" decoding="async" width="1800" height="1201" />
+          <figcaption>Elektromontage am Schaltschrank</figcaption>
         </figure>
       </div>
       <div class="cols-cta reveal">
@@ -1456,6 +1485,14 @@ function setupShots() {
     const sec = $("#team");
     if (sec && !sec.querySelectorAll("[data-shot]").length) sec.hidden = true;
   };
+  // Einzelbilder ohne eigene Kachel (z. B. der Hero-Hintergrund): fehlt die
+  // Datei, verschwindet nur das Bild – der CI-Verlauf trägt die Fläche weiter.
+  document.querySelectorAll("img[data-optional]").forEach((img) => {
+    const weg = () => img.remove();
+    img.addEventListener("error", weg, { once: true });
+    if (img.complete && img.naturalWidth === 0) weg();
+  });
+
   document.querySelectorAll("[data-shot] img").forEach((img) => {
     const drop = () => {
       const fig = img.closest("[data-shot]");
