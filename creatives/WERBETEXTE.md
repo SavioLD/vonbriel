@@ -73,7 +73,7 @@ die schwächsten abschalten statt früher einzugreifen.
 >
 > Bei uns verdrahtest du Maschinen, statt Kabel zu sortieren: Schaltschränke bestücken, Sensoren und Antriebe anschließen, prüfen, fertig. Maschinenbau in Allensbach am Bodensee.
 >
-> Ausbildung als Elektriker, Schaltplan sicher, Deutsch ab B1 – mehr braucht es nicht für den ersten Schritt.
+> Ausbildung als Elektriker, Schaltplan sicher, Deutsch ab B1 – und wenn du schon montiert hast, umso besser.
 >
 > 60 Sekunden, 4 Fragen. Deinen Lebenslauf hängst du direkt an oder reichst ihn nach.
 
@@ -92,7 +92,7 @@ die schwächsten abschalten statt früher einzugreifen.
 >
 > Wilfried von Briel Maschinenbau in Allensbach besetzt eine Stelle in Elektromontage und Verdrahtung. Feste Anstellung in Vollzeit, geregelte Arbeitszeiten, Einarbeitung durch Kollegen, die das seit Jahren machen.
 >
-> Voraussetzungen: abgeschlossene Ausbildung als Elektriker, Schaltpläne lesen und verstehen, Deutsch ab Niveau B1.
+> Voraussetzungen: abgeschlossene Ausbildung als Elektriker, Schaltpläne lesen und verstehen, Deutsch ab Niveau B1. Erfahrung in der Elektromontage ist von Vorteil, aber kein Muss.
 >
 > Der Mini-Check dauert eine Minute – danach melden wir uns innerhalb von 2 Werktagen.
 
