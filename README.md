@@ -105,6 +105,12 @@ Die Schriften (Poppins, Inter) liegen ebenfalls unter `assets/fonts/` und werden
 selbst gehostet – kein Google-Fonts-Request, also ein Roundtrip weniger auf dem
 Handy und kein Datenschutz-Thema.
 
+## Facebook-Seite
+
+Profilbild, Titelbild und Bio-Varianten liegen unter [`facebook/`](facebook/) –
+inklusive der Formatvorgaben und der Zonen, die Facebook beschneidet. Details in
+[`facebook/README.md`](facebook/README.md).
+
 ## Ad-Creatives
 
 Passende Anzeigenmotive in 4:5 und Story/Reels liegen unter

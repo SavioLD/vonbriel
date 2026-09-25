@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facebook-Assets · Wilfried von Briel Maschinenbau</title>
+<meta name="robots" content="noindex" />
+<style>
+/* ==========================================================================
+   Facebook-Assets · Wilfried von Briel Maschinenbau
+
+   ►► RENDERN:  python3 render.py   →  PNGs in png/
+
+   FORMATE (jeweils in doppelter Auflösung gerendert, Facebook skaliert selbst):
+   · Profilbild   1000×1000  – Facebook zeigt es als KREIS. Alles Wichtige
+                               liegt deshalb im inneren Kreis, nicht in den Ecken.
+   · Titelbild    1640×720   – entspricht 820×360 in doppelter Auflösung.
+                               Am Desktop sichtbar: 820×312, am Handy 640×360.
+                               Darum liegt der Inhalt in der mittleren Zone,
+                               und unten links bleibt Platz: dort schiebt sich
+                               am Desktop das Profilbild über das Titelbild.
+   ========================================================================== */
+@font-face { font-family: "Poppins"; font-weight: 600; font-display: block; src: url("../assets/fonts/poppins-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 700; font-display: block; src: url("../assets/fonts/poppins-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 800; font-display: block; src: url("../assets/fonts/poppins-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-display: block; src: url("../assets/fonts/inter-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("../assets/fonts/inter-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-display: block; src: url("../assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  --brand: #0a56a4;
+  --brand-deep: #084784;
+  --brand-900: #063763;
+  --sky: #9dc8f2;
+  --display: "Poppins", sans-serif;
+  --body: "Inter", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { background: #e9eef3; font-family: var(--body); padding: 40px; }
+img, svg { display: block; }
+
+.sheet { display: flex; flex-direction: column; gap: 40px; align-items: flex-start; }
+.item__name { font: 600 13px/1.5 var(--body); color: #55636e; margin-bottom: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.item__hint { text-transform: none; font-weight: 500; color: #7c8894; letter-spacing: 0; }
+.item--preview .canvas { transform: scale(.4); transform-origin: top left; }
+.item--preview[data-kind="profil"] { width: 400px; height: 400px; }
+.item--preview[data-kind="titel"] { width: 656px; height: 288px; }
+
+.canvas { position: relative; overflow: hidden; color: #fff; }
+
+/* ---------- Profilbild ---------- */
+.canvas--profil {
+  width: 1000px; height: 1000px;
+  background: #fff;
+  display: grid; place-items: center;
+}
+/* Hilfslinie zum Prüfen des Kreis-Ausschnitts (im Render unsichtbar) */
+.kreis { position: absolute; inset: 0; border-radius: 50%; }
+.profil__logo { width: 74%; height: auto; }
+.canvas--profil--mono .profil__logo { width: 62%; }
+
+/* ---------- Titelbild ---------- */
+.canvas--titel {
+  width: 1640px; height: 720px;
+  background: linear-gradient(105deg, var(--brand-900) 0%, var(--brand-deep) 46%, var(--brand) 100%);
+}
+.titel__foto { position: absolute; inset: 0; z-index: 1; }
+.titel__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; }
+.titel__foto::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(95deg, rgba(6,55,99,.97) 0%, rgba(8,71,132,.93) 40%, rgba(8,71,132,.5) 66%, rgba(6,55,99,.3) 100%);
+}
+.titel__textur {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 3px, transparent 3px 14px);
+}
+/* Inhalt bleibt in der Zone, die auch am Handy sichtbar ist */
+.titel__inner {
+  position: absolute; z-index: 4; inset: 0;
+  /* oben ausgerichtet: unten links ueberdeckt am Desktop das Profilbild einen
+     Teil des Titelbilds, dieser Bereich bleibt textfrei. Seitlich 200px, damit
+     am Handy (mittlere 1280px sichtbar) nichts abgeschnitten wird. */
+  padding: 86px 200px 60px 200px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 60px;
+}
+.titel__text { max-width: 900px; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 13px;
+  font: 700 21px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: #cfe3fa;
+  padding: 13px 24px; border-radius: 999px;
+  background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.26);
+  margin-bottom: 24px;
+}
+.eyebrow b { width: 11px; height: 11px; border-radius: 50%; background: var(--sky); }
+.titel__head {
+  font-family: var(--display); font-weight: 800;
+  font-size: 74px; line-height: 1.04; letter-spacing: -.02em;
+}
+.titel__head em { font-style: normal; color: var(--sky); display: block; }
+.titel__sub { margin-top: 18px; font: 500 27px/1.38 var(--body); color: #dceaf9; max-width: 28ch; }
+.titel__stelle {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-top: 26px; padding: 18px 28px; border-radius: 999px;
+  background: #fff; color: var(--brand); font: 700 25px/1 var(--body);
+}
+.titel__logo {
+  flex: none; align-self: flex-end; background: #fff; border-radius: 20px; padding: 20px 26px;
+  box-shadow: 0 20px 50px -22px rgba(0,0,0,.6);
+}
+.titel__logo img { height: 92px; width: auto; }
+/* Unten links schiebt sich am Desktop das Profilbild über das Titelbild –
+   dieser Bereich bleibt frei von Text. */
+.titel__frei { position: absolute; left: 0; bottom: 0; width: 430px; height: 250px; z-index: 2; }
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet"></div>
+
+<script>
+const FIRMA = {
+  name: "Wilfried von Briel Maschinenbau",
+  ort: "Allensbach am Bodensee",
+  web: "vonbriel-maschinenbau.de",
+  stelle: "Industrieelektriker (m/w/d)",
+};
+
+const ASSETS = [
+  {
+    name: "profilbild",
+    kind: "profil",
+    hinweis: "1000×1000 · Facebook schneidet rund zu, Logo liegt im Kreis",
+    html: () => `
+      <img class="profil__logo" src="../assets/logo.png" alt="${FIRMA.name}" data-logo />
+      <div class="kreis" data-safe></div>`,
+  },
+  {
+    name: "profilbild-monogramm",
+    kind: "profil",
+    klasse: "canvas--profil--mono",
+    hinweis: "1000×1000 · Alternative: nur das Monogramm, lesbar auch bei 40 px im Feed",
+    html: () => `
+      <img class="profil__logo" src="../assets/logo-monogramm.png" alt="${FIRMA.name}" data-logo-mono />
+      <div class="kreis" data-safe></div>`,
+  },
+  {
+    name: "titelbild-firma",
+    kind: "titel",
+    hinweis: "1640×720 (= 820×360) · dauerhaft nutzbar",
+    foto: "team-halle.jpg",
+    html: () => `
+      <div class="titel__inner">
+        <div class="titel__text" data-safe>
+          <span class="eyebrow"><b></b>Maschinen- &amp; Anlagenbau</span>
+          <div class="titel__head">Maschinen,<em>die laufen.</em></div>
+          <p class="titel__sub">Montage, Elektromontage und Verdrahtung in ${FIRMA.ort}.</p>
+        </div>
+        <div class="titel__logo" data-safe>
+          <img src="../assets/logo.png" alt="${FIRMA.name}" data-logo />
+        </div>
+      </div>`,
+  },
+  {
+    name: "titelbild-stelle",
+    kind: "titel",
+    hinweis: "1640×720 · Variante fürs Recruiting, solange die Stelle offen ist",
+    foto: "elektromontage.jpg",
+    fotoPos: "46% 38%",
+    html: () => `
+      <div class="titel__inner">
+        <div class="titel__text" data-safe>
+          <span class="eyebrow"><b></b>${FIRMA.ort}</span>
+          <div class="titel__head">Wir verstärken<em>unser Team.</em></div>
+          <span class="titel__stelle">${FIRMA.stelle} · jetzt bewerben</span>
+        </div>
+        <div class="titel__logo" data-safe>
+          <img src="../assets/logo.png" alt="${FIRMA.name}" data-logo />
+        </div>
+      </div>`,
+  },
+];
+
+const preview = !location.search.includes("render=1");
+const sheet = document.getElementById("sheet");
+
+ASSETS.forEach((a) => {
+  const el = document.createElement("div");
+  el.className = "item" + (preview ? " item--preview" : "");
+  el.dataset.kind = a.kind;
+  el.innerHTML = `
+    ${preview ? `<div class="item__name">${a.name}<br><span class="item__hint">${a.hinweis}</span></div>` : ""}
+    <div class="canvas canvas--${a.kind} ${a.klasse || ""}" data-name="${a.name}" data-kind="${a.kind}">
+      ${a.foto ? `<div class="titel__foto" data-shot><img src="../assets/${a.foto}" style="object-position:${a.fotoPos || "54% 42%"}" alt="" /></div>` : ""}
+      ${a.kind === "titel" ? `<div class="titel__textur"></div><div class="titel__frei"></div>` : ""}
+      ${a.html()}
+    </div>`;
+  sheet.appendChild(el);
+});
+
+/* Logo: erst PNG, dann SVG, dann JPG – wie auf der Website. */
+document.querySelectorAll("img[data-logo]").forEach((img) => {
+  let versuch = 0;
+  const fehlt = () => {
+    versuch += 1;
+    if (versuch === 1) { img.src = "../assets/logo.svg"; return; }
+    if (versuch === 2) { img.src = "../assets/logo.jpg"; return; }
+    img.remove();
+  };
+  img.addEventListener("error", fehlt);
+  if (img.complete && img.naturalWidth === 0) fehlt();
+});
+
+/* Fehlt ein Foto, bleibt der CI-Verlauf stehen. */
+document.querySelectorAll("[data-shot] img").forEach((img) => {
+  const weg = () => { const l = img.closest("[data-shot]"); if (l) l.remove(); };
+  img.addEventListener("error", weg, { once: true });
+  if (img.complete && img.naturalWidth === 0) weg();
+});
+</script>
+</body>
+</html>
