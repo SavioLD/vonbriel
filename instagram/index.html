@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Instagram-Assets · Wilfried von Briel Maschinenbau</title>
+<meta name="robots" content="noindex" />
+<style>
+/* ==========================================================================
+   Instagram-Assets · Wilfried von Briel Maschinenbau
+
+   ►► RENDERN:  python3 render.py   →  PNGs in png/
+
+   Instagram hat KEIN Titelbild. Gebraucht werden:
+   · Profilbild        1080×1080 – wird rund gezeigt, im Feed nur ~32 px klein
+   · Highlight-Cover   1080×1080 – ebenfalls rund, Instagram nimmt die Mitte
+   Feed-Posts (4:5) und Stories (9:16) decken bereits die Ad-Creatives ab.
+   ========================================================================== */
+@font-face { font-family: "Poppins"; font-weight: 600; font-display: block; src: url("../assets/fonts/poppins-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 700; font-display: block; src: url("../assets/fonts/poppins-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 800; font-display: block; src: url("../assets/fonts/poppins-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("../assets/fonts/inter-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-display: block; src: url("../assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  --brand: #0a56a4;
+  --brand-deep: #084784;
+  --brand-900: #063763;
+  --sky: #9dc8f2;
+  --display: "Poppins", sans-serif;
+  --body: "Inter", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { background: #e9eef3; font-family: var(--body); padding: 40px; }
+img, svg { display: block; }
+
+.sheet { display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; }
+.item__name { font: 600 13px/1.5 var(--body); color: #55636e; margin-bottom: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.item__hint { text-transform: none; font-weight: 500; color: #7c8894; letter-spacing: 0; }
+.item--preview .canvas { transform: scale(.28); transform-origin: top left; }
+.item--preview { width: 302px; height: 302px; }
+
+.canvas { position: relative; overflow: hidden; width: 1080px; height: 1080px; }
+
+/* ---------- Profilbild ---------- */
+.canvas--profil { background: #fff; display: grid; place-items: center; }
+.profil__logo { width: 74%; height: auto; }
+.canvas--profil--mono .profil__logo { width: 64%; }
+
+/* ---------- Highlight-Cover ----------
+   Instagram schneidet einen Kreis aus der Mitte. Das Symbol sitzt deshalb
+   mittig und klein genug, dass der Zuschnitt nichts abschneidet. */
+.canvas--highlight {
+  background: linear-gradient(150deg, var(--brand) 0%, var(--brand-deep) 55%, var(--brand-900) 100%);
+  display: grid; place-items: center;
+}
+.canvas--highlight::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.055) 0 4px, transparent 4px 18px);
+}
+.highlight__mitte {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 46px;
+}
+.highlight__icon { color: #fff; }
+.highlight__icon svg { width: 430px; height: 430px; }
+/* Kein Wort im Kreis: Instagram zeigt die Beschriftung ohnehin darunter. */
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet"></div>
+
+<script>
+const FIRMA = { name: "Wilfried von Briel Maschinenbau" };
+
+/* Symbole – bewusst kräftige Linien, damit sie auch bei 60 px tragen */
+const ICON = {
+  plan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16M8 13h5M13 13v4"/><circle cx="16.5" cy="15.5" r="1.6"/></svg>',
+  team: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20v-1.4A4.6 4.6 0 0 1 7.1 14h3.8a4.6 4.6 0 0 1 4.6 4.6V20"/><path d="M16.5 5.4a3.2 3.2 0 0 1 0 5.2M18 14.2a4.6 4.6 0 0 1 3.5 4.4V20"/></svg>',
+  werkstatt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-6.4 6.4a2 2 0 1 0 2.8 2.8l6.4-6.4a4 4 0 0 0 5.6-5.6l-2.8 2.8-2-2 2.8-2.8z"/></svg>',
+  kontakt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.93.36 1.85.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.96.34 1.88.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+};
+
+const ASSETS = [
+  { name: "profilbild-monogramm", kind: "profil", klasse: "canvas--profil--mono",
+    hinweis: "1080×1080 · Empfehlung – rund zugeschnitten auch bei 32 px lesbar",
+    html: () => `<img class="profil__logo" src="../assets/logo-monogramm.png" alt="${FIRMA.name}" data-logo-mono />` },
+  { name: "profilbild", kind: "profil",
+    hinweis: "1080×1080 · Alternative mit vollständigem Logo",
+    html: () => `<img class="profil__logo" src="../assets/logo.png" alt="${FIRMA.name}" data-logo />` },
+  { name: "highlight-jobs", kind: "highlight", hinweis: "Highlight-Cover · Jobs",
+    html: () => `<div class="highlight__mitte" data-safe><span class="highlight__icon">${ICON.plan}</span></div>` },
+  { name: "highlight-team", kind: "highlight", hinweis: "Highlight-Cover · Team",
+    html: () => `<div class="highlight__mitte" data-safe><span class="highlight__icon">${ICON.team}</span></div>` },
+  { name: "highlight-werkstatt", kind: "highlight", hinweis: "Highlight-Cover · Werkstatt",
+    html: () => `<div class="highlight__mitte" data-safe><span class="highlight__icon">${ICON.werkstatt}</span></div>` },
+  { name: "highlight-kontakt", kind: "highlight", hinweis: "Highlight-Cover · Kontakt",
+    html: () => `<div class="highlight__mitte" data-safe><span class="highlight__icon">${ICON.kontakt}</span></div>` },
+];
+
+const preview = !location.search.includes("render=1");
+const sheet = document.getElementById("sheet");
+
+ASSETS.forEach((a) => {
+  const el = document.createElement("div");
+  el.className = "item" + (preview ? " item--preview" : "");
+  el.innerHTML = `
+    ${preview ? `<div class="item__name">${a.name}<br><span class="item__hint">${a.hinweis}</span></div>` : ""}
+    <div class="canvas canvas--${a.kind} ${a.klasse || ""}" data-name="${a.name}" data-kind="${a.kind}">
+      ${a.html()}
+    </div>`;
+  sheet.appendChild(el);
+});
+
+/* Logo: erst PNG, dann SVG, dann JPG – wie auf der Website. */
+document.querySelectorAll("img[data-logo], img[data-logo-mono]").forEach((img) => {
+  const mono = img.hasAttribute("data-logo-mono");
+  let versuch = 0;
+  const fehlt = () => {
+    versuch += 1;
+    if (versuch === 1) { img.src = mono ? "../assets/logo.png" : "../assets/logo.svg"; return; }
+    if (versuch === 2) { img.src = "../assets/logo.jpg"; return; }
+    img.remove();
+  };
+  img.addEventListener("error", fehlt);
+  if (img.complete && img.naturalWidth === 0) fehlt();
+});
+</script>
+</body>
+</html>

@@ -111,6 +111,13 @@ Profilbild, Titelbild und Bio-Varianten liegen unter [`facebook/`](facebook/) â€
 inklusive der Formatvorgaben und der Zonen, die Facebook beschneidet. Details in
 [`facebook/README.md`](facebook/README.md).
 
+## Instagram-Profil
+
+Profilbild, Highlight-Cover und Bio-Varianten (max. 150 Zeichen) liegen unter
+[`instagram/`](instagram/). Ein Titelbild gibt es bei Instagram nicht; Feed-Posts
+und Stories decken die Ad-Creatives ab. Details in
+[`instagram/README.md`](instagram/README.md).
+
 ## Ad-Creatives
 
 Passende Anzeigenmotive in 4:5 und Story/Reels liegen unter
