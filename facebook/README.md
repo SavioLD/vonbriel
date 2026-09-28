@@ -11,8 +11,8 @@ Karriereseite – Profil- und Titelbild passen dadurch zueinander.
 |---|---|---|
 | `png/profilbild-monogramm.png` | 1000 × 1000 | **Empfehlung** als Profilbild |
 | `png/profilbild.png` | 1000 × 1000 | Alternative mit dem vollständigen Logo |
-| `png/titelbild-firma.png` | 1640 × 720 | Titelbild, dauerhaft nutzbar |
-| `png/titelbild-stelle.png` | 1640 × 720 | Titelbild für die Zeit der Stellenanzeige |
+| `png/titelbild-firma.png` | 1702 × 630 | Titelbild, dauerhaft nutzbar |
+| `png/titelbild-stelle.png` | 1702 × 630 | Titelbild für die Zeit der Stellenanzeige |
 
 ### Warum zwei Profilbilder?
 
@@ -22,19 +22,27 @@ bei dieser Größe zu einem grauen Streifen verschwimmen. Das **Monogramm**
 bleibt erkennbar – deshalb die Empfehlung. Beide Varianten sind aus derselben
 Logodatei aufgebaut, nichts wurde nachgezeichnet oder umgefärbt.
 
-### Warum 1640 × 720 beim Titelbild?
+### Warum 1702 × 630 beim Titelbild?
 
-Das ist 820 × 360 in doppelter Auflösung – Facebook rechnet herunter und das
-Bild bleibt auf Retina-Displays scharf. Beim Aufbau sind drei Zonen beachtet,
-die Facebook unterschiedlich beschneidet:
+Das ist **851 × 315 in doppelter Auflösung** – genau das Seitenverhältnis
+(2,7 : 1), in dem Facebook das Titelbild am Desktop anzeigt. Die doppelte
+Auflösung hält es auf Retina-Displays scharf.
 
-- **Handy** zeigt nur die mittleren ~1280 px der Breite → Text und Logo liegen
-  innerhalb dieses Bereichs.
-- **Desktop** zeigt 820 × 312 statt 360 → oben und unten bleiben je ~48 px frei.
+Ein erster Entwurf lag in 820 × 360 (2,28 : 1). Das ist eine ältere Vorgabe –
+Facebook skaliert ein solches Bild auf die Breite und schneidet dann rund 16 %
+der Höhe weg, oben und unten je etwa 8 %. Im Test war dadurch die obere Zeile
+angeschnitten.
+
+Beim Aufbau sind drei Zonen beachtet, die Facebook unterschiedlich beschneidet:
+
+- **Handy** zeigt nur die mittleren ~1120 px der Breite (Anzeige 640 × 360) →
+  Text und Logo liegen mit Abstand innerhalb dieses Bereichs.
+- **Oben und unten** bleiben je ~60 px frei, weil einzelne Ansichten leicht
+  anders beschneiden.
 - **Unten links** schiebt sich am Desktop das Profilbild über das Titelbild →
   dieser Bereich bleibt textfrei.
 
-Der Render prüft diese drei Zonen bei jedem Durchlauf.
+Der Render prüft alle drei Zonen bei jedem Durchlauf und meldet Verstöße.
 
 ## Bio (max. 255 Zeichen)
 

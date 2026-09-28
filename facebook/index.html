@@ -14,8 +14,9 @@
    FORMATE (jeweils in doppelter Auflösung gerendert, Facebook skaliert selbst):
    · Profilbild   1000×1000  – Facebook zeigt es als KREIS. Alles Wichtige
                                liegt deshalb im inneren Kreis, nicht in den Ecken.
-   · Titelbild    1640×720   – entspricht 820×360 in doppelter Auflösung.
-                               Am Desktop sichtbar: 820×312, am Handy 640×360.
+   · Titelbild    1702×630   – entspricht 851×315 in doppelter Auflösung.
+                               Genau dieses Verhältnis (2,7:1) zeigt Facebook am
+                               Desktop an; am Handy werden die Seiten beschnitten.
                                Darum liegt der Inhalt in der mittleren Zone,
                                und unten links bleibt Platz: dort schiebt sich
                                am Desktop das Profilbild über das Titelbild.
@@ -45,7 +46,7 @@ img, svg { display: block; }
 .item__hint { text-transform: none; font-weight: 500; color: #7c8894; letter-spacing: 0; }
 .item--preview .canvas { transform: scale(.4); transform-origin: top left; }
 .item--preview[data-kind="profil"] { width: 400px; height: 400px; }
-.item--preview[data-kind="titel"] { width: 656px; height: 288px; }
+.item--preview[data-kind="titel"] { width: 681px; height: 252px; }
 
 .canvas { position: relative; overflow: hidden; color: #fff; }
 
@@ -62,7 +63,7 @@ img, svg { display: block; }
 
 /* ---------- Titelbild ---------- */
 .canvas--titel {
-  width: 1640px; height: 720px;
+  width: 1702px; height: 630px;
   background: linear-gradient(105deg, var(--brand-900) 0%, var(--brand-deep) 46%, var(--brand) 100%);
 }
 .titel__foto { position: absolute; inset: 0; z-index: 1; }
@@ -79,16 +80,16 @@ img, svg { display: block; }
 /* Inhalt bleibt in der Zone, die auch am Handy sichtbar ist */
 .titel__inner {
   position: absolute; z-index: 4; inset: 0;
-  /* oben ausgerichtet: unten links ueberdeckt am Desktop das Profilbild einen
-     Teil des Titelbilds, dieser Bereich bleibt textfrei. Seitlich 200px, damit
-     am Handy (mittlere 1280px sichtbar) nichts abgeschnitten wird. */
-  padding: 86px 200px 60px 200px;
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 60px;
+  /* Seitlich 300px: am Handy zeigt Facebook nur die mittleren ~1120px.
+     Oben/unten je 70-80px Luft, weil andere Ansichten etwas anders schneiden.
+     Unten links bleibt Platz fuer das Profilbild, das sich darueber schiebt. */
+  padding: 80px 360px 70px 360px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 50px;
 }
-.titel__text { max-width: 900px; }
+.titel__text { max-width: 700px; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 13px;
-  font: 700 21px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: #cfe3fa;
+  font: 700 20px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: #cfe3fa;
   padding: 13px 24px; border-radius: 999px;
   background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.26);
   margin-bottom: 24px;
@@ -96,23 +97,23 @@ img, svg { display: block; }
 .eyebrow b { width: 11px; height: 11px; border-radius: 50%; background: var(--sky); }
 .titel__head {
   font-family: var(--display); font-weight: 800;
-  font-size: 74px; line-height: 1.04; letter-spacing: -.02em;
+  font-size: 66px; line-height: 1.05; letter-spacing: -.02em;
 }
 .titel__head em { font-style: normal; color: var(--sky); display: block; }
-.titel__sub { margin-top: 18px; font: 500 27px/1.38 var(--body); color: #dceaf9; max-width: 28ch; }
+.titel__sub { margin-top: 16px; font: 500 25px/1.36 var(--body); color: #dceaf9; max-width: 42ch; }
 .titel__stelle {
   display: inline-flex; align-items: center; gap: 14px;
-  margin-top: 26px; padding: 18px 28px; border-radius: 999px;
-  background: #fff; color: var(--brand); font: 700 25px/1 var(--body);
+  margin-top: 24px; padding: 17px 26px; border-radius: 999px;
+  background: #fff; color: var(--brand); font: 700 24px/1 var(--body);
 }
 .titel__logo {
   flex: none; align-self: flex-end; background: #fff; border-radius: 20px; padding: 20px 26px;
   box-shadow: 0 20px 50px -22px rgba(0,0,0,.6);
 }
-.titel__logo img { height: 92px; width: auto; }
+.titel__logo img { height: 82px; width: auto; }
 /* Unten links schiebt sich am Desktop das Profilbild über das Titelbild –
    dieser Bereich bleibt frei von Text. */
-.titel__frei { position: absolute; left: 0; bottom: 0; width: 430px; height: 250px; z-index: 2; }
+.titel__frei { position: absolute; left: 0; bottom: 0; width: 460px; height: 250px; z-index: 2; }
 </style>
 </head>
 <body>
@@ -154,7 +155,7 @@ const ASSETS = [
         <div class="titel__text" data-safe>
           <span class="eyebrow"><b></b>Maschinen- &amp; Anlagenbau</span>
           <div class="titel__head">Maschinen,<em>die laufen.</em></div>
-          <p class="titel__sub">Montage, Elektromontage und Verdrahtung in ${FIRMA.ort}.</p>
+          <p class="titel__sub">Montage &amp; Elektromontage · ${FIRMA.ort}</p>
         </div>
         <div class="titel__logo" data-safe>
           <img src="../assets/logo.png" alt="${FIRMA.name}" data-logo />
