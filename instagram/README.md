@@ -39,7 +39,21 @@ Dafür braucht es nichts Neues – die Ad-Creatives passen direkt:
 Instagram erlaubt deutlich weniger als Facebook: **150 Zeichen** in der Bio und
 **30 Zeichen** im Namensfeld. Alle Varianten sind gezählt (Emojis zählen doppelt).
 
-**Namensfeld** – das fettgedruckte Feld, nach dem Instagram auch sucht:
+**Username (`@…`)** – die Adresse `instagram.com/<username>`. Einmalig auf ganz
+Instagram, erlaubt sind Buchstaben, Ziffern, Punkt und Unterstrich, max. 30
+Zeichen. Der Reihe nach durchprobieren:
+
+1. `vonbriel.maschinenbau` (21 Zeichen) – **Empfehlung**
+2. `vonbrielmaschinenbau` (20) – falls 1 vergeben ist
+3. `vonbriel.bodensee` (17) – falls beides vergeben ist
+
+Kein `.jobs`/`.karriere` im Username: der Account läuft nach der Kampagne weiter,
+und der Username ist die Adresse für Visitenkarte, Website und Impressum. Das
+Recruiting gehört ins Namensfeld, das sich jederzeit zurückstellen lässt.
+Denselben Namen auch auf Facebook vergeben (Seite → Info → Nutzername:
+`facebook.com/vonbriel.maschinenbau`) – eine Schreibweise für beide Plattformen.
+
+**Namensfeld** – das fettgedruckte Feld, nach dem Instagram auch sucht (max. 30):
 
 - `von Briel Maschinenbau` (22 Zeichen) – Empfehlung
 - `von Briel Maschinenbau | Jobs` (29 Zeichen) – während der Kampagne
@@ -69,7 +83,7 @@ Karriereseite verlinkt ist.
    Anzeigen laufen sauber auf beiden Plattformen.
 2. **Profilbild:** `profilbild-monogramm.png` hochladen, Zuschnitt nicht
    verschieben – das Bild ist quadratisch und mittig aufgebaut.
-3. **Name und Bio** aus den Varianten oben einsetzen.
+3. **Username, Name und Bio** aus den Varianten oben einsetzen.
 4. **Link:** während der Kampagne die Karriereseite, sonst
    `vonbriel-maschinenbau.de`.
 5. **Highlights anlegen:** je ein Highlight „Jobs", „Team", „Werkstatt",
