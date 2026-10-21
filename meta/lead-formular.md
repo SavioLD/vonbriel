@@ -52,68 +52,56 @@ jeweiligen Creative.
 Festanstellung in Vollzeit, unbefristet
 Maschinen verdrahten nach Schaltplan – kein Baustellen-Stress
 Kleines Team, kurze Wege, Allensbach am Bodensee
-3 kurze Fragen – du bist in unter einer Minute durch
+3 Fragen mit Ja oder Nein – du bist in 30 Sekunden durch
 ```
 
 ## 3 · Fragen
 
-**Reihenfolge:** erst die drei Auswahlfragen, dann die Kontaktdaten. Wer drei
+**Reihenfolge:** erst die drei Ja/Nein-Fragen, dann die Kontaktdaten. Wer drei
 Mal getippt hat, gibt die Nummer eher her als umgekehrt.
 
-### Benutzerdefinierte Fragen – Typ jeweils „Multiple Choice"
+### Benutzerdefinierte Fragen – Typ jeweils „Multiple Choice", Antworten `Ja` / `Nein`
 
-**Frage 1 — KO**
+Drei Fragen, drei KO-Kriterien, zwei Antwortmöglichkeiten. Jedes „Nein" ist ein
+Ausschluss – mehr muss das Formular nicht leisten.
+
+**Frage 1 — Ausbildung**
 
 ```
-Hast du eine abgeschlossene Ausbildung im Elektrobereich?
+Hast du eine abgeschlossene Ausbildung im Elektrobereich (auch im Ausland)?
 ```
 
 ```
 Ja
-Ja, im Ausland abgeschlossen
 Nein
 ```
 
-**Frage 2 — KO**
+**Frage 2 — Schaltplan**
 
 ```
 Kannst du Schaltpläne lesen und danach verdrahten?
 ```
 
 ```
-Ja, auch komplexe Pläne
-Ja, die Grundlagen sitzen
+Ja
 Nein
 ```
 
-**Frage 3 — KO**
+**Frage 3 — Deutsch**
 
 ```
-Wie gut sprichst du Deutsch?
-```
-
-```
-Sehr gut / Muttersprache
-Gut – Gespräche kein Problem
-Grundkenntnisse (B1)
-Nur wenige Worte (A1/A2)
-```
-
-**Frage 4 — optional, kein KO**
-
-```
-Hast du schon in der Elektromontage gearbeitet?
+Kannst du dich auf Deutsch im Arbeitsalltag verständigen (mind. B1)?
 ```
 
 ```
-Ja, mehrere Jahre
-Ja, erste Erfahrung
-Nein, noch nicht
+Ja
+Nein
 ```
 
-Frage 4 filtert nicht, sie sortiert nur die Reihenfolge der Rückrufe. Wenn das
-Formular möglichst kurz bleiben soll, weglassen – die drei KO-Fragen stehen für
-sich.
+Die Klammern tragen hier die Arbeit: Meta erlaubt bei einer Frage keinen
+Hilfstext, also muss die Grenze in der Frage selbst stehen. „Auch im Ausland"
+verhindert, dass eine ausländische Ausbildung fälschlich mit „Nein" beantwortet
+wird; „mind. B1" macht aus einer Einschätzungsfrage eine klare Schwelle.
 
 ### Kontaktinformationen (vorausgefüllt)
 
@@ -168,14 +156,9 @@ Lead des Tages. Alternative: „Website ansehen" mit der Karriereseite.
 
 Ein Instant Form **lehnt niemanden ab**. Meta sammelt alle Einsendungen ein,
 auch die mit „Nein". Die KO-Antworten stehen aber in jedem Lead, damit lässt
-sich in LeadTable in Sekunden sortieren. Raus fällt, wer eine dieser drei
-Antworten gegeben hat:
-
-| Frage | Absage bei |
-|---|---|
-| Ausbildung | „Nein" |
-| Schaltplan | „Nein" |
-| Deutsch | „Nur wenige Worte (A1/A2)" |
+sich in LeadTable in Sekunden sortieren: **ein „Nein" bei einer der drei Fragen
+ist die Absage.** Wer dreimal „Ja" angegeben hat, erfüllt die Mindestkriterien
+der Stelle.
 
 Wer die Absage automatisch will, fährt über die Karriereseite: die lehnt schon
 im Funnel freundlich ab, bevor überhaupt ein Lead entsteht. Beides parallel zu
@@ -186,6 +169,5 @@ Lead-Kosten, Karriereseite für vorgefilterte Bewerber mit Lebenslauf.
 
 Alle Texte sind bewusst kurz gehalten. Meta veröffentlicht die Limits für die
 einzelnen Felder nicht zuverlässig und zeigt sie erst im Formular selbst an;
-die längsten Werte hier liegen bei 57 Zeichen (Frage 1) und 28 Zeichen
-(längste Antwortoption), also deutlich unter allem, was üblicherweise
-abgeschnitten wird.
+die längste Frage liegt hier bei 75 Zeichen, die Antworten bei 2 bzw. 4 –
+also deutlich unter allem, was üblicherweise abgeschnitten wird.
