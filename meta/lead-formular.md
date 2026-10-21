@@ -106,23 +106,31 @@ wird; „mind. B1" macht aus einer Einschätzungsfrage eine klare Schwelle.
 ### Kontaktinformationen (vorausgefüllt)
 
 **Beschreibung** – das Feld über den Kontaktfeldern, das Meta verlangt
-(„Teile Nutzern mit, in welcher Form ihre Informationen verwendet werden"):
+(„Teile Nutzern mit, in welcher Form ihre Informationen verwendet werden").
+Genau hier entscheidet sich, ob jemand die Nummer herausgibt, deshalb steht
+die Datensicherheit im Satz und nicht der Rückruf:
 
 ```
-Damit wir uns bei dir melden können – telefonisch oder per WhatsApp. Deine Angaben gehen nur an unser Team in Allensbach, nicht an Dritte.
+Deine Daten sind bei uns sicher: Wir nutzen sie ausschließlich für deine Bewerbung, geben sie nicht an Dritte weiter und löschen sie auf Wunsch jederzeit.
 ```
 
 Kürzere Alternative:
 
 ```
-Wir brauchen deine Nummer nur, um dich zurückzurufen. Deine Angaben bleiben bei uns im Haus.
+Deine Daten bleiben bei uns – nur für deine Bewerbung, keine Weitergabe an Dritte, Löschung auf Wunsch jederzeit.
 ```
 
-Für Wechsler, die noch in einem Arbeitsverhältnis stehen:
+Für Wechsler, die noch in einem Arbeitsverhältnis stehen – nimmt die größte
+Bremse bei Recruiting-Leads heraus:
 
 ```
-Wir melden uns innerhalb von zwei Werktagen – telefonisch oder per WhatsApp. Deine Angaben sehen nur wir, dein Arbeitgeber erfährt nichts.
+Wir behandeln deine Angaben vertraulich: nur für deine Bewerbung, keine Weitergabe an Dritte, dein jetziger Arbeitgeber erfährt nichts.
 ```
+
+Alle drei Zusagen müssen auch eingehalten werden: keine Weitergabe an Dritte
+heißt, dass die Leads nicht bei einem Dienstleister außerhalb des
+Auftragsverarbeitungs-Vertrags landen, und „Löschung auf Wunsch" ist ohnehin
+ein Recht nach DSGVO – es hier zu nennen kostet nichts und senkt die Hemmung.
 
 **Felder**, in dieser Reihenfolge:
 
