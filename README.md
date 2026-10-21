@@ -118,6 +118,13 @@ Profilbild, Highlight-Cover und Bio-Varianten (max. 150 Zeichen) liegen unter
 und Stories decken die Ad-Creatives ab. Details in
 [`instagram/README.md`](instagram/README.md).
 
+## Meta Lead-Formular
+
+Der fertig ausgefüllte Inhalt für das Instant Form im Werbeanzeigenmanager –
+Intro, die drei KO-Fragen als Auswahlfragen, Datenschutz-Hinweis und
+Danke-Screen – liegt in [`meta/lead-formular.md`](meta/lead-formular.md).
+Die Fragen entsprechen denen der Karriereseite.
+
 ## Ad-Creatives
 
 Passende Anzeigenmotive in 4:5 und Story/Reels liegen unter
