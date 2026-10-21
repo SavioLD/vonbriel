@@ -105,14 +105,41 @@ wird; „mind. B1" macht aus einer Einschätzungsfrage eine klare Schwelle.
 
 ### Kontaktinformationen (vorausgefüllt)
 
-- Vorname
-- Nachname
-- Telefonnummer
-- E-Mail-Adresse
-- Postleitzahl
+**Beschreibung** – das Feld über den Kontaktfeldern, das Meta verlangt
+(„Teile Nutzern mit, in welcher Form ihre Informationen verwendet werden"):
+
+```
+Damit wir uns bei dir melden können – telefonisch oder per WhatsApp. Deine Angaben gehen nur an unser Team in Allensbach, nicht an Dritte.
+```
+
+Kürzere Alternative:
+
+```
+Wir brauchen deine Nummer nur, um dich zurückzurufen. Deine Angaben bleiben bei uns im Haus.
+```
+
+Für Wechsler, die noch in einem Arbeitsverhältnis stehen:
+
+```
+Wir melden uns innerhalb von zwei Werktagen – telefonisch oder per WhatsApp. Deine Angaben sehen nur wir, dein Arbeitgeber erfährt nichts.
+```
+
+**Felder**, in dieser Reihenfolge:
+
+1. Vollständiger Name
+2. Telefonnummer
+3. E-Mail-Adresse
+4. Postleitzahl (über „Wähle aus, welche Informationen du benötigst" ergänzen)
 
 Mehr nicht. Jedes zusätzliche Feld kostet Abschlüsse, und alles Weitere klärt
-sich im Telefonat.
+sich im Telefonat. Die Telefonnummer steht vor der E-Mail, weil sie der Kanal
+ist, über den die Bewerbung tatsächlich weitergeht – „Optional" bekommt sie
+deshalb nicht.
+
+**Sprache prüfen:** Steht in der Vorschau „Contact information / Full name /
+Phone number" auf Englisch, ist die Formularsprache noch nicht auf Deutsch
+gestellt. Zahnrad oben rechts → Sprache → Deutsch. Die eigenen Texte bleiben
+dabei erhalten, nur die von Meta gestellten Beschriftungen wechseln.
 
 ## 4 · Datenschutzrichtlinie
 
