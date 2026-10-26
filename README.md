@@ -49,9 +49,22 @@ Beide Wege laufen parallel, siehe `CONFIG` im Script-Teil von `index.html`:
   (Kunde `6a6f3bff4c269f23752c643a`, Tabelle `6a6f3c0e960f8695445ed26f`).
   Übertragen werden Name, Telefon, Wunsch-Kontakt, E-Mail, PLZ, frühester Start, Nachricht,
   Match-Score, alle Antworten (lesbarer Key + ASCII-Alias), Kampagnen-Variante und Quelle.
-- **E-Mail** – über `formsubmit.co` an `CONFIG.leadEmail`
-  (derzeit `savio.roeckle@wave2network.de`, jederzeit auf eine Briel-Adresse umstellbar).
-  Nur dieser Weg transportiert einen optional hochgeladenen Lebenslauf als Anhang.
+- **E-Mail** – über **Web3Forms** (`api.web3forms.com/submit`, Access Key in
+  `CONFIG.web3formsKey`). Nur dieser Weg transportiert einen hochgeladenen
+  Lebenslauf als Anhang (Feld `attachment`, bis 5 MB – Pro-Funktion).
+
+  **Wer die Bewerbungen bekommt, steht nicht im Code.** Das wird im
+  Web3Forms-Dashboard eingestellt (Form → Settings → Recipients). Eine
+  Briel-Adresse zu hinterlegen ist also eine Einstellung, keine Code-Änderung –
+  und mehrere Empfänger sind dort ebenfalls möglich. Der Access Key ist
+  öffentlich und darf im Quelltext stehen.
+
+  Web3Forms antwortet mit `{ success, message }`. Die Seite wertet das aus:
+  Lehnt der Dienst nur den Anhang ab, geht die Bewerbung automatisch ein
+  zweites Mal ohne Datei raus – und die Erfolgsseite bittet dann darum, den
+  Lebenslauf nachzureichen, statt eine Zustellung zu behaupten, die nicht
+  stattgefunden hat. Scheitert auch das, erscheint ein Mailto-Ausweg an
+  `CONFIG.leadEmail`.
 
 ## Mobil & Conversion
 

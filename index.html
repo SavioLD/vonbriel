@@ -1143,8 +1143,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    KONFIGURATION
 ---------------------------------------------------------------------- */
 const CONFIG = {
-  // Wohin gehen die Bewerbungen per E-Mail? (formsubmit.co – Empfänger frei
-  // änderbar, z. B. später auf eine Briel-Adresse wie info@vonbriel-maschinenbau.de)
+  // E-Mail-Versand läuft über Web3Forms. Der Access Key ist öffentlich und
+  // gehört in den Quelltext. Wer die Bewerbungen bekommt, steht NICHT hier,
+  // sondern im Web3Forms-Dashboard (Form → Settings → Recipients) – eine
+  // Briel-Adresse einzutragen ist also eine Einstellung, keine Code-Änderung.
+  web3formsKey: "b2edd9f9-850d-4dfa-80d1-3a1b2d01d07e",
+
+  // Sichtbare Adresse auf der Seite: Notfall-Mailto, falls der Versand
+  // scheitert, und die Adresse zum Nachreichen des Lebenslaufs.
   leadEmail: "savio.roeckle@wave2network.de",
 
   // LeadTable-Anbindung: „Generic Webhook" der Tabelle
@@ -1153,7 +1159,7 @@ const CONFIG = {
   leadWebhookUrl: "https://api-v2.lead-table.com/api/webhook/generic/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YWJsZUlEIjoiNmE2ZjNjMGU5NjBmODY5NTQ0NWVkMjZmIiwiY3VzdG9tZXJJRCI6IjZhNmYzYmZmNGMyNjlmMjM3NTJjNjQzYSIsImFnZW5jeUlEIjoiNjliZDc3NzVlNGQxN2IzOGVkNjUzZDE2IiwiaWF0IjoxNzg1Njc0NzY2fQ.yyKv9u68M3I5s-WZsf4ehuD-wdJhfWlhrUCeKN5wL2U",
 
   quelle: "von Briel Karriere-Funnel",
-  maxUploadMB: 8, // max. Dateigröße für Lebenslauf-Upload
+  maxUploadMB: 5, // Web3Forms nimmt pro Anhang bis zu 5 MB an
 };
 
 /* ----------------------------------------------------------------------
@@ -1985,11 +1991,14 @@ async function onSubmit(e) {
   btn.innerHTML = '<span class="spinner"></span> Wird gesendet …';
 
   const data = { name, phone, email, plz, contactPref };
+  state.cvAbgelehnt = false;
   track("bewerbung_absenden", { kontakt: contactPref, mit_lebenslauf: !!file });
   const ok = await sendLead(data, file);
   if (ok) {
     state.done = true;
-    state.cvDabei = !!file;
+    // Nur wenn der Anhang auch wirklich durchging – sonst zeigt die
+    // Erfolgsseite den Hinweis zum Nachreichen.
+    state.cvDabei = !!file && !state.cvAbgelehnt;
     clearProgress();
     track("bewerbung_gesendet", { qualifikation: computeMatch().text, kontakt: contactPref });
     goTo(totalPos());
@@ -2031,14 +2040,18 @@ function buildLead({ name, phone, email, plz, contactPref }) {
   return lead;
 }
 
+// FormData für Web3Forms. Die Felder mit Sonderbedeutung (access_key, subject,
+// from_name, replyto) stehen vorne, danach folgt der Lead – jedes Feld wird so
+// in der E-Mail zu einer eigenen Zeile.
 function collectPayload(data) {
   const j = state.job;
+  const m = computeMatch();
   const fd = new FormData();
-  fd.append("_subject", `Neue Bewerbung: ${j.title} ${j.gender} (von Briel Maschinenbau)`);
-  fd.append("_template", "table");
-  fd.append("_captcha", "false");
-  if (data.email) fd.append("_replyto", data.email);
-  fd.append("_honey", "");
+  fd.append("access_key", CONFIG.web3formsKey);
+  fd.append("subject", `Bewerbung ${j.title} ${j.gender} – ${data.name} (${m.text})`);
+  fd.append("from_name", "Karriereseite von Briel");
+  // Antwort geht direkt an den Bewerber, sofern er eine Adresse hinterlassen hat.
+  if (data.email) fd.append("replyto", data.email);
   Object.entries(buildLead(data)).forEach(([k, v]) => fd.append(k, v));
   return fd;
 }
@@ -2100,32 +2113,39 @@ function postWebhook(data) {
   } catch (e) { sendPlain(); }
 }
 
+// Web3Forms: ein Endpoint für beide Fälle, mit und ohne Lebenslauf.
+// WICHTIG: keinen Content-Type setzen – den Multipart-Boundary schreibt der
+// Browser selbst, ein eigener Header macht den Upload kaputt.
 async function sendLead(data, file) {
   postWebhook(data); // parallel, blockiert die E-Mail-Zustellung nicht
-  const fd = collectPayload(data);
-  const url = `https://formsubmit.co/${CONFIG.leadEmail}`;
 
-  // Mit Datei → Standard-Endpoint (Datei wird als Anhang verschickt).
-  // mode:'no-cors' → Antwort ist opak, Versand erfolgt aber serverseitig.
-  if (file) {
-    fd.append("Lebenslauf", file, file.name);
-    try {
-      await fetch(url, { method: "POST", body: fd, mode: "no-cors" });
-      return true;
-    } catch (err) {
-      console.warn("Lead-Versand (mit Datei) fehlgeschlagen:", err);
-      return false;
-    }
-  }
-
-  // Ohne Datei → AJAX-Endpoint (zuverlässige Erfolgsmeldung)
-  try {
-    const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.leadEmail}`, {
+  // Ein Versuch = ein POST. Gibt true zurück, wenn Web3Forms success meldet.
+  const post = async (mitDatei) => {
+    const fd = collectPayload(data);
+    if (mitDatei && file) fd.append("attachment", file, file.name);
+    const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: { Accept: "application/json" },
       body: fd,
     });
-    return res.ok;
+    // Web3Forms antwortet immer mit JSON { success, message }. Ein HTTP 200
+    // allein genügt nicht – bei abgelehntem Anhang steht success:false drin.
+    const out = await res.json().catch(() => null);
+    if (out && out.success) return true;
+    console.warn("Web3Forms hat abgelehnt:", res.status, out && out.message);
+    return false;
+  };
+
+  try {
+    if (await post(true)) return true;
+    // Scheiterte es am Anhang (Dateityp, Größe, Plan)? Dann lieber die
+    // Bewerbung ohne Lebenslauf retten, als den Bewerber mit einem Fehler
+    // stehen zu lassen – nachreichen kann er ihn immer noch.
+    if (file) {
+      state.cvAbgelehnt = true; // Erfolgsseite verspricht dann nichts Falsches
+      return await post(false);
+    }
+    return false;
   } catch (err) {
     console.warn("Lead-Versand fehlgeschlagen:", err);
     return false;
